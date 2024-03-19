@@ -70,7 +70,7 @@ void Tab_CatalogObjects() {
 
                 UI::TableNextColumn();
                 if (UI::Selectable(article.Id.GetName(), false, UI::SelectableFlags::SpanAllColumns))
-                    ExploreNod(article);
+                    ExploreNod(article.Id.GetName(), article);
 
                 UI::TableNextColumn();
                 UI::Text(IntToHex(article.Id.Value));

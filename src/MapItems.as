@@ -83,7 +83,7 @@ void Tab_MapItems() {
                 UI::TableNextColumn();
                 UI::BeginDisabled(item.item is null);
                 if (UI::Selectable(item.id.GetName(), false, UI::SelectableFlags::SpanAllColumns))
-                    ExploreNod(item.item);
+                    ExploreNod(item.id.GetName(), item.item);
                 UI::EndDisabled();
 
                 UI::TableNextColumn();

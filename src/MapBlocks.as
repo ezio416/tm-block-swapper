@@ -89,7 +89,7 @@ void Tab_MapBlocks() {
                 UI::TableNextColumn();
                 UI::BeginDisabled(block.block is null);
                 if (UI::Selectable(block.id.GetName() + "##" + i, false, UI::SelectableFlags::SpanAllColumns))
-                    ExploreNod(block.block);
+                    ExploreNod(block.id.GetName(), block.block);
                 UI::EndDisabled();
 
                 UI::TableNextColumn();
