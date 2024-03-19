@@ -1,7 +1,7 @@
 // c 2024-03-19
 // m 2024-03-19
 
-uint16 GetMemberOffset(CMwNod@ nod, const string &in memberName) {
+const uint16 GetMemberOffset(CMwNod@ nod, const string &in memberName) {
     const Reflection::MwClassInfo@ type = Reflection::TypeOf(nod);
 
     if (type is null)
