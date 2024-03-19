@@ -13,6 +13,7 @@ class Block {
     bool                               ghost;
     bool                               ground;
     MwId                               id;
+    uint                               index;
     CGameCtnAnchoredObject@            item;
     vec3                               itemLocation;
     nat3                               location;
@@ -57,7 +58,12 @@ void GetBlocks() {
 
     CTrackMania@ App = cast<CTrackMania@>(GetApp());
 
-    CGameCtnChallenge@ Map = App.RootMap;
+    CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree>(App.Editor);
+    if (Editor is null)
+        return;
+
+    // CGameCtnChallenge@ Map = App.RootMap;
+    CGameCtnChallenge@ Map = Editor.Challenge;
     if (Map is null)
         return;
 
@@ -71,7 +77,7 @@ void GetBlocks() {
             yield();
         }
 
-        if (Map.Blocks[i].DescId.Value != stadiumGrassId)
+        if (Map.Blocks[i].DescId.Value != stadiumGrassId && Map.Blocks[i].DescAuthor.GetName() == "Nadeo")
             blocks.InsertLast(Block(Map.Blocks[i]));
     }
 
@@ -81,6 +87,7 @@ void GetBlocks() {
             yield();
         }
 
+        if (Map.AnchoredObjects[i].ItemModel.Author.GetName() == "Nadeo")
         blocks.InsertLast(Block(Map.AnchoredObjects[i]));
     }
 
