@@ -1,9 +1,7 @@
 // c 2024-03-18
-// m 2024-03-18
+// m 2024-03-19
 
-const uint maxFrameTime   = 20;
-uint64     lastYield      = 0;
-const uint stadiumGrassId = 1073750346;
+const uint stadiumGrassId = 0x4000214A;
 
 class Block {
     MwId                               author;

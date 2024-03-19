@@ -1,20 +1,13 @@
 // c 2024-03-18
-// m 2024-03-18
+// m 2024-03-19
 
 Block@[]     blocks;
 bool         gettingBlocks = false;
+uint64       lastYield     = 0;
+const uint   maxFrameTime  = 20;
 const vec4   rowBgAltColor = vec4(0.0f, 0.0f, 0.0f, 0.5f);
 const float  scale         = UI::GetScale();
-const string title         = "\\$FFF" + Icons::Arrows + "\\$G CP Remover";
-
-[Setting category="General" name="Enabled"]
-bool S_Enabled = true;
-
-[Setting category="General" name="Show/hide with game UI"]
-bool S_HideWithGame = true;
-
-[Setting category="General" name="Show/hide with Openplanet UI"]
-bool S_HideWithOP = false;
+const string title         = "\\$FFF" + Icons::ArrowsH + "\\$G Block Swapper";
 
 void Main() {
 }
@@ -47,87 +40,244 @@ void Render() {
     }
 
     if (UI::Begin(title, S_Enabled, UI::WindowFlags::None)) {
-        if (UI::Button("remove CPs"))
-            startnew(RemoveCps);
-
-        UI::BeginDisabled(gettingBlocks);
-        UI::SameLine();
-        if (UI::Button("get blocks"))
-            startnew(GetBlocks);
-        UI::EndDisabled();
-
-        UI::SameLine();
-        UI::Text("blocks/items: " + blocks.Length);
-
-        if (UI::BeginTable("##table-blocks", 9, UI::TableFlags::RowBg | UI::TableFlags::ScrollY)) {
-            UI::PushStyleColor(UI::Col::TableRowBgAlt, rowBgAltColor);
-
-            UI::TableSetupScrollFreeze(0, 1);
-            // UI::TableSetupColumn("del",      UI::TableColumnFlags::WidthFixed, scale * 30.0f);
-            UI::TableSetupColumn("id");
-            UI::TableSetupColumn("id value", UI::TableColumnFlags::WidthFixed, scale * 90.0f);
-            UI::TableSetupColumn("author",   UI::TableColumnFlags::WidthFixed, scale * 50.0f);
-            UI::TableSetupColumn("color",    UI::TableColumnFlags::WidthFixed, scale * 50.0f);
-            UI::TableSetupColumn("dir",      UI::TableColumnFlags::WidthFixed, scale * 50.0f);
-            UI::TableSetupColumn("ghost",    UI::TableColumnFlags::WidthFixed, scale * 50.0f);
-            UI::TableSetupColumn("ground",   UI::TableColumnFlags::WidthFixed, scale * 50.0f);
-            UI::TableSetupColumn("loc",      UI::TableColumnFlags::WidthFixed, scale * 80.0f);
-            UI::TableSetupColumn("wp type",  UI::TableColumnFlags::WidthFixed, scale * 90.0f);
-            UI::TableHeadersRow();
-
-            UI::ListClipper clipper(blocks.Length);
-            while (clipper.Step()) {
-                for (int i = clipper.DisplayStart; i < clipper.DisplayEnd; i++) {
-                    Block@ block = blocks[i];
-
-                    UI::TableNextRow();
-
-                    // UI::TableNextColumn();
-                    // UI::BeginDisabled(block.removed);
-                    // if (UI::Button(Icons::TrashO + "##" + i))
-
-                    // UI::EndDisabled();
-
-                    UI::TableNextColumn();
-                    if (UI::Selectable(block.id.GetName() + "##" + i, false, UI::SelectableFlags::SpanAllColumns)) {
-                        if (block.block !is null)
-                            ExploreNod(block.block);
-                        else if (block.item !is null)
-                            ExploreNod(block.item);
-                    }
-
-                    UI::TableNextColumn();
-                    UI::Text(tostring(block.id.Value));
-
-                    UI::TableNextColumn();
-                    UI::Text(block.author.GetName());
-
-                    UI::TableNextColumn();
-                    UI::Text(tostring(block.color));
-
-                    UI::TableNextColumn();
-                    UI::Text(tostring(block.direction));
-
-                    UI::TableNextColumn();
-                    UI::Text(tostring(block.ghost));
-
-                    UI::TableNextColumn();
-                    UI::Text(tostring(block.ground));
-
-                    UI::TableNextColumn();
-                    UI::Text(tostring(block.location));
-
-                    UI::TableNextColumn();
-                    UI::Text(tostring(block.waypointType));
-                }
-            }
-
-            UI::PopStyleColor();
-            UI::EndTable();
-        }
+        UI::BeginTabBar("##tabs");
+            Tab_MapBlocks();
+            Tab_NadeoBlocks();
+        UI::EndTabBar();
     }
 
     UI::End();
+}
+
+void Tab_MapBlocks() {
+    if (!UI::BeginTabItem("Map Blocks"))
+        return;
+
+    if (UI::Button("replace CPs"))
+        ReplaceCps();
+
+    // if (UI::Button("remove CPs"))
+    //     startnew(RemoveCps);
+
+    UI::BeginDisabled(gettingBlocks);
+    UI::SameLine();
+    if (UI::Button("get blocks"))
+        startnew(GetBlocks);
+    UI::EndDisabled();
+
+    UI::SameLine();
+    UI::Text("blocks/items: " + blocks.Length);
+
+    if (UI::BeginTable("##table-map-blocks", 9, UI::TableFlags::RowBg | UI::TableFlags::ScrollY)) {
+        UI::PushStyleColor(UI::Col::TableRowBgAlt, rowBgAltColor);
+
+        UI::TableSetupScrollFreeze(0, 1);
+        // UI::TableSetupColumn("del",      UI::TableColumnFlags::WidthFixed, scale * 30.0f);
+        UI::TableSetupColumn("id");
+        UI::TableSetupColumn("id value", UI::TableColumnFlags::WidthFixed, scale * 90.0f);
+        UI::TableSetupColumn("author",   UI::TableColumnFlags::WidthFixed, scale * 50.0f);
+        UI::TableSetupColumn("color",    UI::TableColumnFlags::WidthFixed, scale * 50.0f);
+        UI::TableSetupColumn("dir",      UI::TableColumnFlags::WidthFixed, scale * 50.0f);
+        UI::TableSetupColumn("ghost",    UI::TableColumnFlags::WidthFixed, scale * 50.0f);
+        UI::TableSetupColumn("ground",   UI::TableColumnFlags::WidthFixed, scale * 50.0f);
+        UI::TableSetupColumn("loc",      UI::TableColumnFlags::WidthFixed, scale * 80.0f);
+        UI::TableSetupColumn("wp type",  UI::TableColumnFlags::WidthFixed, scale * 90.0f);
+        UI::TableHeadersRow();
+
+        UI::ListClipper clipper(blocks.Length);
+        while (clipper.Step()) {
+            for (int i = clipper.DisplayStart; i < clipper.DisplayEnd; i++) {
+                Block@ block = blocks[i];
+
+                UI::TableNextRow();
+
+                // UI::TableNextColumn();
+                // UI::BeginDisabled(block.removed);
+                // if (UI::Button(Icons::TrashO + "##" + i))
+
+                // UI::EndDisabled();
+
+                UI::TableNextColumn();
+                if (UI::Selectable(block.id.GetName() + "##" + i, false, UI::SelectableFlags::SpanAllColumns)) {
+                    if (block.block !is null)
+                        ExploreNod(block.block);
+                    else if (block.item !is null)
+                        ExploreNod(block.item);
+                }
+
+                UI::TableNextColumn();
+                UI::Text(IntToHex(block.id.Value));
+
+                UI::TableNextColumn();
+                UI::Text(block.author.GetName());
+
+                UI::TableNextColumn();
+                UI::Text(tostring(block.color));
+
+                UI::TableNextColumn();
+                UI::Text(tostring(block.direction));
+
+                UI::TableNextColumn();
+                UI::Text(tostring(block.ghost));
+
+                UI::TableNextColumn();
+                UI::Text(tostring(block.ground));
+
+                UI::TableNextColumn();
+                UI::Text(tostring(block.location));
+
+                UI::TableNextColumn();
+                UI::Text(tostring(block.waypointType));
+            }
+        }
+
+        UI::PopStyleColor();
+        UI::EndTable();
+    }
+
+    UI::EndTabItem();
+}
+
+string nadeoBlockSearch;
+CGameCtnArticle@[] nadeoBlocksFiltered;
+
+void SearchNadeoBlocks() {
+    if (nadeoBlockSearch.Length == 0) {
+        nadeoBlocksFiltered = nadeoBlocks;
+        return;
+    }
+
+    nadeoBlocksFiltered = {};
+
+    for (uint i = 0; i < nadeoBlocks.Length; i++) {
+        if (nadeoBlocks[i].IdName.ToLower().Contains(nadeoBlockSearch.ToLower()))
+            nadeoBlocksFiltered.InsertLast(nadeoBlocks[i]);
+    }
+}
+
+void Tab_NadeoBlocks() {
+    if (!UI::BeginTabItem("Nadeo Blocks"))
+        return;
+
+    UI::BeginDisabled(gettingBlocks);
+    if (UI::Button("get blocks"))
+        startnew(GetNadeoBlocks);
+    UI::EndDisabled();
+
+    UI::SameLine();
+    UI::Text("blocks: " + nadeoBlocks.Length);
+
+    UI::SameLine();
+    UI::Text("LUT size: " + cpReplaceLut.GetSize());
+
+    nadeoBlockSearch = UI::InputText("###search-nadeo-blocks", nadeoBlockSearch);
+
+    UI::BeginDisabled(nadeoBlockSearch.Length == 0);
+    UI::SameLine();
+    if (UI::Button("search"))
+        SearchNadeoBlocks();
+    UI::EndDisabled();
+
+    UI::BeginDisabled(nadeoBlockSearch.Length == 0);
+    UI::SameLine();
+    if (UI::Button("clear")) {
+        nadeoBlockSearch = "";
+        SearchNadeoBlocks();
+    }
+    UI::EndDisabled();
+
+    if (nadeoBlockSearch.Length > 0) {
+        UI::SameLine();
+        UI::Text("results: " + nadeoBlocksFiltered.Length);
+    }
+
+    if (UI::BeginTable("##table-nadeo-blocks", 3, UI::TableFlags::Resizable | UI::TableFlags::RowBg | UI::TableFlags::ScrollY)) {
+        UI::PushStyleColor(UI::Col::TableRowBgAlt, rowBgAltColor);
+
+        UI::TableSetupScrollFreeze(0, 1);
+        UI::TableSetupColumn("name");
+        UI::TableSetupColumn("nod type");
+        // UI::TableSetupColumn("id")
+        UI::TableSetupColumn("id value", UI::TableColumnFlags::WidthFixed, scale * 90.0f);
+        // UI::TableSetupColumn("author",   UI::TableColumnFlags::WidthFixed, scale * 50.0f);
+        // UI::TableSetupColumn("color",    UI::TableColumnFlags::WidthFixed, scale * 50.0f);
+        // UI::TableSetupColumn("dir",      UI::TableColumnFlags::WidthFixed, scale * 50.0f);
+        // UI::TableSetupColumn("ghost",    UI::TableColumnFlags::WidthFixed, scale * 50.0f);
+        // UI::TableSetupColumn("ground",   UI::TableColumnFlags::WidthFixed, scale * 50.0f);
+        // UI::TableSetupColumn("loc",      UI::TableColumnFlags::WidthFixed, scale * 80.0f);
+        // UI::TableSetupColumn("wp type",  UI::TableColumnFlags::WidthFixed, scale * 90.0f);
+        UI::TableHeadersRow();
+
+        UI::ListClipper clipper(nadeoBlocksFiltered.Length);
+        while (clipper.Step()) {
+            for (int i = clipper.DisplayStart; i < clipper.DisplayEnd; i++) {
+                CGameCtnArticle@ article = nadeoBlocksFiltered[i];
+
+                UI::TableNextRow();
+
+                UI::TableNextColumn();
+                if (UI::Selectable(article.IdName, false))
+                    ExploreNod(article);
+
+                UI::TableNextColumn();
+                if (article.LoadedNod !is null) {
+                    const Reflection::MwClassInfo@ type = Reflection::TypeOf(article.LoadedNod);
+
+                    if (type !is null) {
+                        UI::Text(type.Name);
+                    }
+                }
+
+                UI::TableNextColumn();
+                UI::Text(IntToHex(article.Id.Value));
+            }
+        }
+
+        UI::PopStyleColor();
+        UI::EndTable();
+    }
+
+    UI::EndTabItem();
+}
+
+void ReplaceCps() {
+    print("replacing CPs");
+
+    CTrackMania@ App = cast<CTrackMania@>(GetApp());
+
+    CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree>(App.Editor);
+    if (Editor is null)
+        return;
+
+    CGameCtnChallenge@ Map = Editor.Challenge;
+    if (Map is null)
+        return;
+
+    CGameEditorPluginMapMapType@ PMT = Editor.PluginMapType;
+    if (PMT is null)
+        return;
+
+    uint total = 0;
+
+    for (int i = Map.Blocks.Length - 1; i >= 0; i--) {
+        CGameCtnBlock@ block = Map.Blocks[i];
+
+        if (cpReplaceLut.Exists(IntToHex(block.DescId.Value))) {
+            CGameCtnBlockInfo@ replacement = cast<CGameCtnBlockInfo@>(cpReplaceLut[IntToHex(block.DescId.Value)]);
+
+            PMT.RemoveBlockSafe(block.BlockModel, Nat3ToInt3(block.Coord), CGameEditorPluginMap::ECardinalDirections(block.BlockDir));
+
+            if (block.IsGhostBlock())
+                PMT.PlaceGhostBlock(replacement, Nat3ToInt3(block.Coord), CGameEditorPluginMap::ECardinalDirections(block.BlockDir));
+            else
+                PMT.PlaceBlock(replacement, Nat3ToInt3(block.Coord), CGameEditorPluginMap::ECardinalDirections(block.BlockDir));
+
+            total++;
+        } else
+            warn("id " + IntToHex(block.DescId.Value) + " not found in LUT");
+    }
+
+    print("replaced " + total + " blocks");
 }
 
 void RemoveCps() {
@@ -156,7 +306,7 @@ void RemoveCps() {
         if (block.block is null)
             continue;
 
-        if (block.id.Value == 1073760396) {
+        if (block.id.Value == 0x4000488C) {  // ring CP
             PMT.RemoveBlockSafe(block.block.BlockModel, int3(block.location.x, block.location.y, block.location.z), CGameEditorPluginMap::ECardinalDirections(block.direction));
             total++;
         }
@@ -182,20 +332,6 @@ void RemoveCps() {
     SaveAndReloadMap();
 }
 
-uint16 GetMemberOffset(CMwNod@ nod, const string &in memberName) {
-    const Reflection::MwClassInfo@ type = Reflection::TypeOf(nod);
-
-    if (type is null)
-        throw("Unable to find reflection info for nod");
-
-    const Reflection::MwMemberInfo@ member = type.GetMember(memberName);
-
-    if (member is null)
-        throw("Unable to find member \"" + memberName + "\" in \"" + type.Name + "\"");
-
-    return member.Offset;
-}
-
 void SaveAndReloadMap() {
     print('save and reload map');
 
@@ -219,14 +355,14 @@ void SaveAndReloadMap() {
     startnew(_RestoreMapName);
 }
 
-bool SaveMapSameName(CGameCtnEditorFree@ editor) {
-    string fileName = editor.Challenge.MapInfo.FileName;
-    _restoreMapName = editor.Challenge.MapName;
+bool SaveMapSameName(CGameCtnEditorFree@ Editor) {
+    string fileName = Editor.Challenge.MapInfo.FileName;
+    _restoreMapName = Editor.Challenge.MapName;
     if (fileName.Length == 0) {
         warn("Map must be saved, first.");
         return false;
     }
-    editor.PluginMapType.SaveMap(fileName);
+    Editor.PluginMapType.SaveMap(fileName);
     startnew(_RestoreMapName);
     print('saved map');
     return true;
