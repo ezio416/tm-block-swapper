@@ -1,5 +1,5 @@
 // c 2024-03-19
-// m 2024-03-19
+// m 2024-03-20
 
 CGameCtnArticle@[] catalogfiltered;
 dictionary@        catalogObjects        = dictionary();
@@ -27,12 +27,7 @@ void LoadCatalogObjects() {
     CTrackMania@ App = cast<CTrackMania@>(GetApp());
 
     for (uint i = 0; i < App.GlobalCatalog.Chapters[objectsChapterIndex].Articles.Length; i++) {
-        const uint64 now = Time::Now;
-
-        if (now - lastYield > maxFrameTime) {
-            lastYield = now;
-            yield();
-        }
+        YieldIfNeeded();
 
         CGameCtnArticle@ Article = App.GlobalCatalog.Chapters[objectsChapterIndex].Articles[i];
 

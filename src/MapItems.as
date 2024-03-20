@@ -1,5 +1,5 @@
 // c 2024-03-19
-// m 2024-03-19
+// m 2024-03-20
 
 bool    loadingMapItems = false;
 Item@[] mapItems;
@@ -34,12 +34,7 @@ void LoadMapItems() {
     ClearMapItems();
 
     for (uint i = 0; i < Map.AnchoredObjects.Length; i++) {
-        const uint64 now = Time::Now;
-
-        if (now - lastYield > maxFrameTime) {
-            lastYield = now;
-            yield();
-        }
+        YieldIfNeeded();
 
         mapItems.InsertLast(Item(Map.AnchoredObjects[i]));
     }

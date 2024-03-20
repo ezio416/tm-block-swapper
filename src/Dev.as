@@ -1,10 +1,13 @@
 // c 2024-03-19
 // m 2024-03-20
 
-const uint16 O_AIR_MODE_BOOL = GetMemberOffset("CGameCtnEditorFree", "GridColor") - 0x34;  // 0xBD4 - 0xC08 (GridColor)
+const uint16 offsetAirBlockMode = GetMemberOffset("CGameCtnEditorFree", "GridColor") - 0x34;  // 0xBD4 - 0xC08 (GridColor)
 
 bool AirBlockModeActive(CGameCtnEditorFree@ Editor) {
-    return Dev::GetOffsetUint8(Editor, O_AIR_MODE_BOOL) > 0;
+    if (Editor is null)
+        return false;
+
+    return Dev::GetOffsetUint8(Editor, offsetAirBlockMode) > 0;
 }
 
 uint16 GetMemberOffset(const string &in className, const string &in memberName) {

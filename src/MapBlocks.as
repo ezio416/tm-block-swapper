@@ -1,14 +1,16 @@
 // c 2024-03-19
-// m 2024-03-19
+// m 2024-03-20
 
-bool       loadingMapBlocks = false;
-Block@[]   mapBlocks;
+bool     loadingMapBlocks = false;
+Block@[] mapBlocks;
+Block@[] mapBlocksCp;
 
 void ClearMapBlocks() {
-    if (mapBlocks.Length == 0)
+    if (mapBlocks.Length == 0 && mapBlocksCp.Length == 0)
         return;
 
     mapBlocks = {};
+    mapBlocksCp = {};
 }
 
 void LoadMapBlocks() {
@@ -16,6 +18,9 @@ void LoadMapBlocks() {
         return;
 
     loadingMapBlocks = true;
+
+    const uint64 start = Time::Now;
+    trace("loading map blocks");
 
     CTrackMania@ App = cast<CTrackMania@>(GetApp());
 
@@ -33,20 +38,26 @@ void LoadMapBlocks() {
 
     ClearMapBlocks();
 
-
     for (uint i = 0; i < Map.Blocks.Length; i++) {
-        const uint64 now = Time::Now;
+        YieldIfNeeded();
 
-        if (now - lastYield > maxFrameTime) {
-            lastYield = now;
-            yield();
+        if (Editor is null || Map is null || i >= Map.Blocks.Length) {  // exited editor while loading blocks
+            ClearMapBlocks();
+            loadingMapBlocks = false;
+            return;
         }
 
         Block@ block = Block(Map.Blocks[i]);
 
-        if (block.id.Value != stadiumGrassId)
+        if (block.id.Value != stadiumGrassId) {
             mapBlocks.InsertLast(block);
+
+            if (cpLut.Exists(block.id.GetName()))
+                mapBlocksCp.InsertLast(block);
+        }
     }
+
+    trace("loaded " + mapBlocks.Length + " blocks (" + mapBlocksCp.Length + " swappable) after " + (Time::Now - start) + "ms (" + Time::Format(Time::Now - start) + ")");
 
     loadingMapBlocks = false;
 }

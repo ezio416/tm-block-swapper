@@ -1,8 +1,6 @@
 // c 2024-03-18
 // m 2024-03-20
 
-uint64       lastYield      = 0;
-const uint   maxFrameTime   = 20;
 const uint   nadeoAuthorId  = 0x40000E5A;
 const vec4   rowBgAltColor  = vec4(0.0f, 0.0f, 0.0f, 0.5f);
 const float  scale          = UI::GetScale();
@@ -13,7 +11,7 @@ void OnDestroyed() { FreeAllAllocated(); }
 void OnDisabled()  { FreeAllAllocated(); }
 
 void Main() {
-    InitCpLut();
+    InitLUTs();
 }
 
 void RenderMenu() {
@@ -63,8 +61,16 @@ void Tab_Main() {
     if (!UI::BeginTabItem("Main"))
         return;
 
-    if (UI::Button("Replace CPs"))
+    UI::BeginDisabled(replacingCps);
+    if (UI::Button("Replace CP blocks"))
         startnew(ReplaceCPs);
+    UI::EndDisabled();
+
+    UI::BeginDisabled(stopReplacing || !replacingCps);
+    UI::SameLine();
+    if (UI::Button("STOP"))
+        stopReplacing = true;
+    UI::EndDisabled();
 
     UI::EndTabItem();
 }

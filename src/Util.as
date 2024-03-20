@@ -1,5 +1,8 @@
 // c 2024-03-19
-// m 2024-03-19
+// m 2024-03-20
+
+uint64     lastYield    = 0;
+const uint maxFrameTime = 20;
 
 void AwaitEditor() {
     CTrackMania@ App = cast<CTrackMania@>(GetApp());
@@ -30,7 +33,7 @@ const string IntToHex(const int i) {
     return "0x" + Text::Format("%X", i);
 }
 
-const string FormatPointer(uint64 ptr) {
+const string FormatPointer(const uint64 ptr) {
     return "0x" + Text::Format("%llX", ptr);
 }
 
@@ -42,4 +45,16 @@ bool Nat3EqNat3(const nat3 one, const nat3 two) {
     return one.x == two.x
         && one.y == two.y
         && one.z == two.z;
+}
+
+void YieldIfNeeded(const int i = 0) {
+    const uint64 now = Time::Now;
+
+    if (now - lastYield > maxFrameTime) {
+        lastYield = now;
+        yield();
+
+        if (i > 0)
+            print("yield at " + i);
+    }
 }

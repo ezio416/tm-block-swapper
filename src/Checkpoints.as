@@ -1,9 +1,12 @@
 // c 2024-03-19
 // m 2024-03-20
 
-dictionary@ cpLut = dictionary();
+dictionary@ cpLut         = dictionary();
+dictionary@ finLut        = dictionary();
+bool        replacingCps  = false;
+bool        stopReplacing = false;
 
-void InitCpLut() {
+void InitLUTs() {
     cpLut["RoadTechCheckpoint"               ] = "RoadTechStraight"             ;
     cpLut["RoadTechCheckpointSlopeUp"        ] = "RoadTechSlopeStraight"        ;
     cpLut["RoadTechCheckpointTiltRight"      ] = "RoadTechTiltStraight"         ;
@@ -36,86 +39,121 @@ void InitCpLut() {
     cpLut["OpenIceRoadCheckpointSlope2Up"    ] = "OpenIceRoadSlope2Straight"    ;
     cpLut["OpenGrassRoadCheckpoint"          ] = "OpenGrassRoadStraight"        ;
     cpLut["OpenGrassRoadCheckpointSlope2Up"  ] = "OpenGrassRoadSlope2Straight"  ;
+
+    finLut[""] = "";
 }
 
 void ReplaceCPs() {
+    if (replacingCps)
+        return;
+
+    replacingCps = true;
+
+    const uint64 start = Time::Now;
     trace("replacing CPs");
 
     CTrackMania@ App = cast<CTrackMania@>(GetApp());
 
     CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree>(App.Editor);
-    if (Editor is null)
+    if (Editor is null) {
+        replacingCps = false;
         return;
+    }
 
     CGameCtnChallenge@ Map = Editor.Challenge;
-    if (Map is null)
+    if (Map is null) {
+        replacingCps = false;
         return;
+    }
 
     CSmEditorPluginMapType@ PMT = cast<CSmEditorPluginMapType@>(Editor.PluginMapType);
-    if (PMT is null)
+    if (PMT is null) {
+        replacingCps = false;
         return;
+    }
 
     uint total = 0;
 
-    for (int i = Map.Blocks.Length - 1; i >= 0; i--) {
-        CGameCtnBlock@ block = Map.Blocks[i];
+    LoadMapBlocks();
 
-        if (block.DescId.Value == stadiumGrassId)
-            continue;
+    for (uint i = 0; i < mapBlocksCp.Length; i++) {
+        YieldIfNeeded();
 
-        if (!cpLut.Exists(block.DescId.GetName()))
-            continue;
+        trace("replacing block (" + (i + 1) + " / " + mapBlocksCp.Length + ")");
 
-        CGameCtnBlockInfo@ replacement = PMT.GetBlockModelFromName(string(cpLut[block.DescId.GetName()]));
-        if (replacement is null)
+        Block@ block = mapBlocksCp[i];
+
+        const string name = block.id.GetName();
+
+        CGameCtnBlockInfo@ replacement = PMT.GetBlockModelFromName(string(cpLut[name]));
+        if (replacement is null) {
+            warn("replacement not found for " + name);
             continue;
+        }
 
         const bool airBlockModePre = AirBlockModeActive(Editor);
         const CGameEditorPluginMap::EMapElemColor colorPre = PMT.NextMapElemColor;
 
-        uint pillars = 0;
+        int pillars = 0;
         string nonPillarName;
 
-        const int3 coords = Nat3ToInt3(block.Coord);
-        const CGameEditorPluginMap::ECardinalDirections dir = CGameEditorPluginMap::ECardinalDirections(block.BlockDir);
-        const CGameEditorPluginMap::EMapElemColor color = CGameEditorPluginMap::EMapElemColor(block.MapElemColor);
-
-        if (!block.IsGround) {
+        if (!block.ground) {
             CGameCtnBlock@ pillar;
 
-            for (int j = coords.y - 1; j > 8; j--) {
-                const int3 coordsCheck = int3(coords.x, j, coords.z);
+            for (int j = block.coord.y - 1; j > 8; j--) {
+                YieldIfNeeded();
+
+                const int3 coordsCheck = int3(block.coord.x, j, block.coord.z);
                 @pillar = PMT.GetBlock(coordsCheck);
 
-                if (pillar is null)
+                if (
+                    pillar is null
+                    || !pillar.DescId.GetName().EndsWith("Pillar")
+                    || pillar.BlockDir != block.direction
+                )
                     break;
 
-                if (pillar.DescId.GetName().EndsWith("Pillar") && pillar.BlockDir == block.BlockDir) {
+                if (nonPillarName.Length == 0)
                     nonPillarName = pillar.DescId.GetName().Replace("Pillar", "");
-                    pillars++;
-                }
+
+                pillars++;
             }
         }
 
-        if (!airBlockModePre)
+        const bool fullPillar = pillars == block.coord.y - 9;
+
+        if ((!fullPillar && !airBlockModePre) || (fullPillar && airBlockModePre))
             Editor.ButtonAirBlockModeOnClick();
 
-        PMT.NextMapElemColor = color;
+        PMT.NextMapElemColor = CGameEditorPluginMap::EMapElemColor(block.color);
 
-        if (block.IsGhostBlock()) {
-            PMT.RemoveGhostBlock(block.BlockModel, coords, dir);
-            PMT.PlaceGhostBlock(replacement, coords, dir);
+        const CGameEditorPluginMap::ECardinalDirections dir = CGameEditorPluginMap::ECardinalDirections(block.direction);
+
+        if (block.ghost) {
+            PMT.RemoveGhostBlock(block.block.BlockModel, block.coord, dir);
+            PMT.PlaceGhostBlock(replacement, block.coord, dir);
         } else {
-            PMT.RemoveBlockSafe(block.BlockModel, coords, dir);
-            PMT.PlaceBlock(replacement, coords, dir);
+            PMT.RemoveBlockSafe(block.block.BlockModel, block.coord, dir);
+            PMT.PlaceBlock(replacement, block.coord, dir);
 
-            if (pillars > 0) {
+            if (fullPillar) {
                 CGameCtnBlockInfo@ pillarReplacement = PMT.GetBlockModelFromName(nonPillarName);
+
+                if (pillarReplacement !is null)
+                    PMT.PlaceBlock(pillarReplacement, block.coord - int3(0, 1, 0), dir);
+                else
+                    warn("pillar replacement not found: " + nonPillarName);
+
+            } else if (pillars > 0) {
+                CGameCtnBlockInfo@ pillarReplacement = PMT.GetBlockModelFromName(nonPillarName);
+
                 if (pillarReplacement !is null) {
-                    for (int j = coords.y - 1; j >= coords.y - pillars; j--)
-                        PMT.PlaceBlock(pillarReplacement, int3(coords.x, j, coords.z), dir);
+                    for (int j = block.coord.y - 1; j >= block.coord.y - pillars; j--) {
+                        // YieldIfNeeded();  // yielding here helps with framerate slightly but greatly increases total time
+                        PMT.PlaceBlock(pillarReplacement, int3(block.coord.x, j, block.coord.z), dir);
+                    }
                 } else
-                    warn("pillarReplacement null: " + nonPillarName);
+                    warn("pillar replacement not found: " + nonPillarName);
             }
         }
 
@@ -125,12 +163,19 @@ void ReplaceCPs() {
         PMT.NextMapElemColor = colorPre;
 
         total++;
+
+        if (stopReplacing) {
+            stopReplacing = false;
+            break;
+        }
     }
 
-    trace("replaced " + total + " block" + (total == 1 ? "" : "s"));
+    trace("replaced " + total + " block" + (total == 1 ? "" : "s") + " after " + (Time::Now - start) + "ms (" + Time::Format(Time::Now - start) + ")");
 
     if (total > 0)
         PMT.AutoSave();  // usually doesn't save but at least fixes undo
+
+    replacingCps = false;
 }
 
 // void RemoveCps() {
