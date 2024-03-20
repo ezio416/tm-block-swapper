@@ -50,7 +50,7 @@ void ReplaceCPs() {
     replacingCps = true;
 
     const uint64 start = Time::Now;
-    trace("replacing CPs");
+    trace("removing/replacing CP blocks");
 
     CTrackMania@ App = cast<CTrackMania@>(GetApp());
 
