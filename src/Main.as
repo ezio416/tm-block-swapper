@@ -1,12 +1,16 @@
 // c 2024-03-18
 // m 2024-03-19
 
-uint64       lastYield     = 0;
-const uint   maxFrameTime  = 20;
-const uint   nadeoAuthorId = 0x40000E5A;
-const vec4   rowBgAltColor = vec4(0.0f, 0.0f, 0.0f, 0.5f);
-const float  scale         = UI::GetScale();
-const string title         = "\\$FFF" + Icons::Exchange + "\\$G Block Swapper";
+uint64       lastYield      = 0;
+const uint   maxFrameTime   = 20;
+const uint   nadeoAuthorId  = 0x40000E5A;
+const vec4   rowBgAltColor  = vec4(0.0f, 0.0f, 0.0f, 0.5f);
+const float  scale          = UI::GetScale();
+const uint   stadiumGrassId = 0x4000214A;
+const string title          = "\\$FFF" + Icons::Exchange + "\\$G Block Swapper";
+
+void OnDestroyed() { FreeAllAllocated(); }
+void OnDisabled()  { FreeAllAllocated(); }
 
 void Main() {
 }
@@ -42,8 +46,10 @@ void Render() {
 
     if (UI::Begin(title, S_Enabled, UI::WindowFlags::None)) {
         UI::BeginTabBar("##tabs");
+            Tab_Main();
             Tab_CatalogObjects();
             Tab_MapBlocks();
+            Tab_Offsets();
             Tab_MapItems();
         UI::EndTabBar();
     }
@@ -51,45 +57,15 @@ void Render() {
     UI::End();
 }
 
-// void ReplaceCps() {
-//     print("replacing CPs");
+void Tab_Main() {
+    if (!UI::BeginTabItem("Main"))
+        return;
 
-//     CTrackMania@ App = cast<CTrackMania@>(GetApp());
+    if (UI::Button("Replace CPs"))
+        startnew(ReplaceCPs);
 
-//     CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree>(App.Editor);
-//     if (Editor is null)
-//         return;
-
-//     CGameCtnChallenge@ Map = Editor.Challenge;
-//     if (Map is null)
-//         return;
-
-//     CGameEditorPluginMapMapType@ PMT = Editor.PluginMapType;
-//     if (PMT is null)
-//         return;
-
-//     uint total = 0;
-
-//     for (int i = Map.Blocks.Length - 1; i >= 0; i--) {
-//         CGameCtnBlock@ block = Map.Blocks[i];
-
-//         if (cpReplaceLut.Exists(IntToHex(block.DescId.Value))) {
-//             CGameCtnBlockInfo@ replacement = cast<CGameCtnBlockInfo@>(cpReplaceLut[IntToHex(block.DescId.Value)]);
-
-//             PMT.RemoveBlockSafe(block.BlockModel, Nat3ToInt3(block.Coord), CGameEditorPluginMap::ECardinalDirections(block.BlockDir));
-
-//             if (block.IsGhostBlock())
-//                 PMT.PlaceGhostBlock(replacement, Nat3ToInt3(block.Coord), CGameEditorPluginMap::ECardinalDirections(block.BlockDir));
-//             else
-//                 PMT.PlaceBlock(replacement, Nat3ToInt3(block.Coord), CGameEditorPluginMap::ECardinalDirections(block.BlockDir));
-
-//             total++;
-//         } else
-//             warn("id " + IntToHex(block.DescId.Value) + " not found in LUT");
-//     }
-
-//     print("replaced " + total + " blocks");
-// }
+    UI::EndTabItem();
+}
 
 // void RemoveCps() {
 //     print("removing CPs");

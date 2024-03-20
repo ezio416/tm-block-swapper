@@ -12,6 +12,10 @@ CGameCtnArticle@ GetCatalogObject(const string &in key) {
     return cast<CGameCtnArticle@>(catalogObjects[key]);
 }
 
+CGameCtnArticle@ GetCatalogObject(const dictionaryValue@ &in key) {
+    return GetCatalogObject(string(key));
+}
+
 void LoadCatalogObjects() {
     if (loadingCatalogObjects)
         return;

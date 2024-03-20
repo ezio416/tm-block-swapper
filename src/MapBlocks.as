@@ -3,7 +3,6 @@
 
 bool       loadingMapBlocks = false;
 Block@[]   mapBlocks;
-const uint stadiumGrassId   = 0x4000214A;
 
 void ClearMapBlocks() {
     if (mapBlocks.Length == 0)
@@ -63,7 +62,7 @@ void Tab_MapBlocks() {
     UI::SameLine();
     UI::Text("Loaded Blocks: " + mapBlocks.Length);
 
-    if (UI::BeginTable("##table-map-blocks", 10, UI::TableFlags::RowBg | UI::TableFlags::ScrollY)) {
+    if (UI::BeginTable("##table-map-blocks", 11, UI::TableFlags::RowBg | UI::TableFlags::ScrollY)) {
         UI::PushStyleColor(UI::Col::TableRowBgAlt, rowBgAltColor);
 
         UI::TableSetupScrollFreeze(0, 1);
@@ -74,6 +73,7 @@ void Tab_MapBlocks() {
         UI::TableSetupColumn("dir",      UI::TableColumnFlags::WidthFixed, scale * 50.0f);
         UI::TableSetupColumn("ghost",    UI::TableColumnFlags::WidthFixed, scale * 50.0f);
         UI::TableSetupColumn("ground",   UI::TableColumnFlags::WidthFixed, scale * 50.0f);
+        UI::TableSetupColumn("variant",  UI::TableColumnFlags::WidthFixed, scale * 50.0f);
         UI::TableSetupColumn("free",     UI::TableColumnFlags::WidthFixed, scale * 50.0f);
         UI::TableSetupColumn("coord",    UI::TableColumnFlags::WidthFixed, scale * 80.0f);
         UI::TableSetupColumn("wp type",  UI::TableColumnFlags::WidthFixed, scale * 90.0f);
@@ -109,6 +109,9 @@ void Tab_MapBlocks() {
 
                 UI::TableNextColumn();
                 UI::Text(tostring(block.ground));
+
+                UI::TableNextColumn();
+                UI::Text(tostring(block.variant));
 
                 UI::TableNextColumn();
                 UI::Text(tostring(block.free));
