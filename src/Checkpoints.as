@@ -70,13 +70,15 @@ void ReplaceCPs() {
         if (replacement is null)
             continue;
 
-        const bool airBlockMode = AirBlockModeActive(Editor);
+        const bool airBlockModePre = AirBlockModeActive(Editor);
+        const CGameEditorPluginMap::EMapElemColor colorPre = PMT.NextMapElemColor;
 
         uint pillars = 0;
         string nonPillarName;
 
         const int3 coords = Nat3ToInt3(block.Coord);
         const CGameEditorPluginMap::ECardinalDirections dir = CGameEditorPluginMap::ECardinalDirections(block.BlockDir);
+        const CGameEditorPluginMap::EMapElemColor color = CGameEditorPluginMap::EMapElemColor(block.MapElemColor);
 
         if (!block.IsGround) {
             CGameCtnBlock@ pillar;
@@ -95,8 +97,10 @@ void ReplaceCPs() {
             }
         }
 
-        if (!airBlockMode)
+        if (!airBlockModePre)
             Editor.ButtonAirBlockModeOnClick();
+
+        PMT.NextMapElemColor = color;
 
         if (block.IsGhostBlock()) {
             PMT.RemoveGhostBlock(block.BlockModel, coords, dir);
@@ -115,8 +119,10 @@ void ReplaceCPs() {
             }
         }
 
-        if (airBlockMode != AirBlockModeActive(Editor))
+        if (airBlockModePre != AirBlockModeActive(Editor))
             Editor.ButtonAirBlockModeOnClick();
+
+        PMT.NextMapElemColor = colorPre;
 
         total++;
     }
