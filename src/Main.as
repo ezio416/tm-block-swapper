@@ -13,6 +13,7 @@ void OnDestroyed() { FreeAllAllocated(); }
 void OnDisabled()  { FreeAllAllocated(); }
 
 void Main() {
+    InitCpLut();
 }
 
 void RenderMenu() {

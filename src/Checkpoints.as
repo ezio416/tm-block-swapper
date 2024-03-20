@@ -1,10 +1,21 @@
 // c 2024-03-19
 // m 2024-03-19
 
-const dictionary@ cpLut = {
-    { "RoadTechCheckpoint", "RoadTechStraight" },
-    { "RoadDirtCheckpoint", "RoadDirtStraight" }
-};
+dictionary@ cpLut = dictionary();
+
+void InitCpLut() {
+    cpLut["RoadTechCheckpoint"       ] = "RoadTechStraight";
+    cpLut["RoadDirtCheckpoint"       ] = "RoadDirtStraight";
+    cpLut["RoadBumpCheckpoint"       ] = "RoadBumpStraight";
+    cpLut["RoadIceCheckpoint"        ] = "RoadIceStraight";
+    cpLut["RoadWaterCheckpoint"      ] = "RoadWaterStraight";
+    cpLut["PlatformWaterCheckpoint"  ] = "PlatformWaterBase";
+    cpLut["PlatformTechCheckpoint"   ] = "PlatformTechBase";
+    cpLut["PlatformDirtCheckpoint"   ] = "PlatformDirtBase";
+    cpLut["PlatformIceCheckpoint"    ] = "PlatformIceBase";
+    cpLut["PlatformGrassCheckpoint"  ] = "PlatformGrassBase";
+    cpLut["PlatformPlasticCheckpoint"] = "PlatformPlasticBase";
+}
 
 void ReplaceCPs() {
     trace("replacing CPs");
@@ -95,12 +106,10 @@ void ReplaceCPs() {
         }
     }
 
-    trace("replaced " + total + " blocks");
+    trace("replaced " + total + " block" + (total == 1 ? "" : "s"));
 
-    if (total > 0) {
-        PMT.AutoSave();
-        trace("created new autosave");
-    }
+    if (total > 0)
+        PMT.AutoSave();  // doesn't always save but at least fixes undo
 }
 
 // void RemoveCps() {
