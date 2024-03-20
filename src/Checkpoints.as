@@ -1,5 +1,5 @@
 // c 2024-03-19
-// m 2024-03-19
+// m 2024-03-20
 
 dictionary@ cpLut = dictionary();
 
@@ -66,65 +66,66 @@ void ReplaceCPs() {
         if (block.DescId.Value == stadiumGrassId)
             continue;
 
-        if (cpLut.Exists(block.DescId.GetName())) {
-            CGameCtnArticle@ article = GetCatalogObject(cpLut[block.DescId.GetName()]);
+        if (!cpLut.Exists(block.DescId.GetName()))
+            continue;
 
-            if (article !is null) {
-                CGameCtnBlockInfo@ replacement = cast<CGameCtnBlockInfo@>(article.LoadedNod);
+        CGameCtnArticle@ article = GetCatalogObject(cpLut[block.DescId.GetName()]);
+        if (article is null)
+            continue;
 
-                if (replacement !is null) {
-                    const bool airBlockMode = AirBlockModeActive(Editor);
+        CGameCtnBlockInfo@ replacement = cast<CGameCtnBlockInfo@>(article.LoadedNod);
+        if (replacement is null)
+            continue;
 
-                    uint pillars = 0;
-                    string nonPillarName;
+        const bool airBlockMode = AirBlockModeActive(Editor);
 
-                    const int3 coords = Nat3ToInt3(block.Coord);
-                    const CGameEditorPluginMap::ECardinalDirections dir = CGameEditorPluginMap::ECardinalDirections(block.BlockDir);
+        uint pillars = 0;
+        string nonPillarName;
 
-                    if (!block.IsGround) {
-                        CGameCtnBlock@ pillar;
+        const int3 coords = Nat3ToInt3(block.Coord);
+        const CGameEditorPluginMap::ECardinalDirections dir = CGameEditorPluginMap::ECardinalDirections(block.BlockDir);
 
-                        for (uint j = coords.y - 1; j > 8; j--) {
-                            const int3 coordsCheck = int3(coords.x, j, coords.z);
-                            @pillar = PMT.GetBlock(coordsCheck);
+        if (!block.IsGround) {
+            CGameCtnBlock@ pillar;
 
-                            if (pillar is null)
-                                break;
+            for (int j = coords.y - 1; j > 8; j--) {
+                const int3 coordsCheck = int3(coords.x, j, coords.z);
+                @pillar = PMT.GetBlock(coordsCheck);
 
-                            if (pillar.DescId.GetName().EndsWith("Pillar") && pillar.BlockDir == block.BlockDir) {
-                                nonPillarName = pillar.DescId.GetName().Replace("Pillar", "");
-                                pillars++;
-                            }
-                        }
-                    }
+                if (pillar is null)
+                    break;
 
-                    if (!airBlockMode)
-                        Editor.ButtonAirBlockModeOnClick();
-
-                    if (block.IsGhostBlock()) {
-                        PMT.RemoveGhostBlock(block.BlockModel, coords, dir);
-                        PMT.PlaceGhostBlock(replacement, coords, dir);
-                    } else {
-                        PMT.RemoveBlockSafe(block.BlockModel, coords, dir);
-                        PMT.PlaceBlock(replacement, coords, dir);
-
-                        if (pillars > 0) {
-                            CGameCtnBlockInfo@ pillarReplacement = PMT.GetBlockModelFromName(nonPillarName);
-                            if (pillarReplacement !is null) {
-                                for (int j = coords.y - 1; j >= coords.y - pillars; j--)
-                                    PMT.PlaceBlock(pillarReplacement, int3(coords.x, j, coords.z), dir);
-                            } else
-                                warn("pillarReplacement null: " + nonPillarName);
-                        }
-                    }
-
-                    if (airBlockMode != AirBlockModeActive(Editor))
-                        Editor.ButtonAirBlockModeOnClick();
-
-                    total++;
+                if (pillar.DescId.GetName().EndsWith("Pillar") && pillar.BlockDir == block.BlockDir) {
+                    nonPillarName = pillar.DescId.GetName().Replace("Pillar", "");
+                    pillars++;
                 }
             }
         }
+
+        if (!airBlockMode)
+            Editor.ButtonAirBlockModeOnClick();
+
+        if (block.IsGhostBlock()) {
+            PMT.RemoveGhostBlock(block.BlockModel, coords, dir);
+            PMT.PlaceGhostBlock(replacement, coords, dir);
+        } else {
+            PMT.RemoveBlockSafe(block.BlockModel, coords, dir);
+            PMT.PlaceBlock(replacement, coords, dir);
+
+            if (pillars > 0) {
+                CGameCtnBlockInfo@ pillarReplacement = PMT.GetBlockModelFromName(nonPillarName);
+                if (pillarReplacement !is null) {
+                    for (int j = coords.y - 1; j >= coords.y - pillars; j--)
+                        PMT.PlaceBlock(pillarReplacement, int3(coords.x, j, coords.z), dir);
+                } else
+                    warn("pillarReplacement null: " + nonPillarName);
+            }
+        }
+
+        if (airBlockMode != AirBlockModeActive(Editor))
+            Editor.ButtonAirBlockModeOnClick();
+
+        total++;
     }
 
     trace("replaced " + total + " block" + (total == 1 ? "" : "s"));
