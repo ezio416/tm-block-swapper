@@ -1,5 +1,5 @@
 // c 2024-03-18
-// m 2024-03-19
+// m 2024-03-20
 
 uint64       lastYield      = 0;
 const uint   maxFrameTime   = 20;
@@ -87,7 +87,7 @@ void Tab_Custom() {
     if (Editor is null)
         return;
 
-    CGameEditorPluginMapMapType@ PMT = Editor.PluginMapType;
+    CSmEditorPluginMapType@ PMT = cast<CSmEditorPluginMapType@>(Editor.PluginMapType);
     if (PMT is null)
         return;
 

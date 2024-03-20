@@ -41,9 +41,6 @@ void InitCpLut() {
 void ReplaceCPs() {
     trace("replacing CPs");
 
-    if (catalogObjects.GetSize() == 0)
-        LoadCatalogObjects();
-
     CTrackMania@ App = cast<CTrackMania@>(GetApp());
 
     CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree>(App.Editor);
@@ -54,7 +51,7 @@ void ReplaceCPs() {
     if (Map is null)
         return;
 
-    CGameEditorPluginMapMapType@ PMT = Editor.PluginMapType;
+    CSmEditorPluginMapType@ PMT = cast<CSmEditorPluginMapType@>(Editor.PluginMapType);
     if (PMT is null)
         return;
 
@@ -69,11 +66,7 @@ void ReplaceCPs() {
         if (!cpLut.Exists(block.DescId.GetName()))
             continue;
 
-        CGameCtnArticle@ article = GetCatalogObject(cpLut[block.DescId.GetName()]);
-        if (article is null)
-            continue;
-
-        CGameCtnBlockInfo@ replacement = cast<CGameCtnBlockInfo@>(article.LoadedNod);
+        CGameCtnBlockInfo@ replacement = PMT.GetBlockModelFromName(string(cpLut[block.DescId.GetName()]));
         if (replacement is null)
             continue;
 
