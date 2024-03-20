@@ -76,7 +76,7 @@ void Table_Offsets(CMwNod@ nod) {
     UI::Text("refs: " + Reflection::GetRefCount(nod));
 
     const uint64 ptr = Dev_GetPointerForNod(nod);
-    UI::Text("nod ptr: " + ptr + " (" + FormatPointer(ptr) + ")");
+    UI::Text("nod ptr: " + ptr + " (" + Text::FormatPointer(ptr) + ")");
 
     if (UI::Button("Explore"))
         ExploreNod("nod", nod, Reflection::TypeOf(nod));
@@ -138,7 +138,7 @@ void Table_Offsets(CMwNod@ nod) {
             const bool maybePointer = PointerLooksGood(Dev::GetOffsetUint64(nod, offset)) && offset % 8 == 0;
             if (maybePointer) {
                 const string raw = StripFormatCodes(value).Replace("\\", "");
-                value = PURPLE + raw + " (" + FormatPointer(Text::ParseUInt64(raw)) + ")";
+                value = PURPLE + raw + " (" + Text::FormatPointer(Text::ParseUInt64(raw)) + ")";
             }
             if (UI::Selectable(value, false))
                 SetClipboard(value);

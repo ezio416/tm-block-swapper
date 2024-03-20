@@ -33,10 +33,6 @@ const string IntToHex(const int i) {
     return "0x" + Text::Format("%X", i);
 }
 
-const string FormatPointer(const uint64 ptr) {
-    return "0x" + Text::Format("%llX", ptr);
-}
-
 const int3 Nat3ToInt3(const nat3 coord) {
     return int3(coord.x, coord.y, coord.z);
 }
