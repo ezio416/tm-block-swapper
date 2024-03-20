@@ -4,21 +4,38 @@
 dictionary@ cpLut = dictionary();
 
 void InitCpLut() {
-    cpLut["RoadTechCheckpoint"       ] = "RoadTechStraight"     ;
-    cpLut["RoadDirtCheckpoint"       ] = "RoadDirtStraight"     ;
-    cpLut["RoadBumpCheckpoint"       ] = "RoadBumpStraight"     ;
-    cpLut["RoadIceCheckpoint"        ] = "RoadIceStraight"      ;
-    cpLut["RoadWaterCheckpoint"      ] = "RoadWaterStraight"    ;
-    cpLut["PlatformWaterCheckpoint"  ] = "PlatformWaterBase"    ;
-    cpLut["PlatformTechCheckpoint"   ] = "PlatformTechBase"     ;
-    cpLut["PlatformDirtCheckpoint"   ] = "PlatformDirtBase"     ;
-    cpLut["PlatformIceCheckpoint"    ] = "PlatformIceBase"      ;
-    cpLut["PlatformGrassCheckpoint"  ] = "PlatformGrassBase"    ;
-    cpLut["PlatformPlasticCheckpoint"] = "PlatformPlasticBase"  ;
-    cpLut["OpenTechRoadCheckpoint"   ] = "OpenTechRoadStraight" ;
-    cpLut["OpenDirtRoadCheckpoint"   ] = "OpenDirtRoadStraight" ;
-    cpLut["OpenIceRoadCheckpoint"    ] = "OpenIceRoadStraight"  ;
-    cpLut["OpenGrassRoadCheckpoint"  ] = "OpenGrassRoadStraight";
+    cpLut["RoadTechCheckpoint"               ] = "RoadTechStraight"             ;
+    cpLut["RoadTechCheckpointSlopeUp"        ] = "RoadTechSlopeStraight"        ;
+    cpLut["RoadTechCheckpointTiltRight"      ] = "RoadTechTiltStraight"         ;
+    cpLut["RoadDirtCheckpoint"               ] = "RoadDirtStraight"             ;
+    cpLut["RoadDirtCheckpointSlopeUp"        ] = "RoadDirtSlopeStraight"        ;
+    cpLut["RoadDirtCheckpointTiltRight"      ] = "RoadDirtTiltStraight"         ;
+    cpLut["RoadBumpCheckpoint"               ] = "RoadBumpStraight"             ;
+    cpLut["RoadBumpCheckpointSlopeUp"        ] = "RoadBumpSlopeStraight"        ;
+    cpLut["RoadBumpCheckpointTiltRight"      ] = "RoadBumpTiltStraight"         ;
+    cpLut["RoadIceCheckpoint"                ] = "RoadIceStraight"              ;
+    cpLut["RoadIceCheckpointSlopeUp"         ] = "RoadIceSlopeStraight"         ;
+    cpLut["RoadIceWithWallCheckpointLeft"    ] = "RoadIceWithWallStraight"      ;
+    cpLut["RoadWaterCheckpoint"              ] = "RoadWaterStraight"            ;
+    cpLut["PlatformWaterCheckpoint"          ] = "PlatformWaterBase"            ;
+    cpLut["PlatformTechCheckpoint"           ] = "PlatformTechBase"             ;
+    cpLut["PlatformTechCheckpointSlope2Up"   ] = "PlatformTechSlope2Straight"   ;
+    cpLut["PlatformDirtCheckpoint"           ] = "PlatformDirtBase"             ;
+    cpLut["PlatformDirtCheckpointSlope2Up"   ] = "PlatformDirtSlope2Straight"   ;
+    cpLut["PlatformIceCheckpoint"            ] = "PlatformIceBase"              ;
+    cpLut["PlatformIceCheckpointSlope2Up"    ] = "PlatformIceSlope2Straight"    ;
+    cpLut["PlatformGrassCheckpoint"          ] = "PlatformGrassBase"            ;
+    cpLut["PlatformGrassCheckpointSlope2Up"  ] = "PlatformGrassSlope2Straight"  ;
+    cpLut["PlatformPlasticCheckpoint"        ] = "PlatformPlasticBase"          ;
+    cpLut["PlatformPlasticCheckpointSlope2Up"] = "PlatformPlasticSlope2Straight";
+    cpLut["OpenTechRoadCheckpoint"           ] = "OpenTechRoadStraight"         ;
+    cpLut["OpenTechRoadCheckpointSlope2Up"   ] = "OpenTechRoadSlope2Straight"   ;
+    cpLut["OpenDirtRoadCheckpoint"           ] = "OpenDirtRoadStraight"         ;
+    cpLut["OpenDirtRoadCheckpointSlope2Up"   ] = "OpenDirtRoadSlope2Straight"   ;
+    cpLut["OpenIceRoadCheckpoint"            ] = "OpenIceRoadStraight"          ;
+    cpLut["OpenIceRoadCheckpointSlope2Up"    ] = "OpenIceRoadSlope2Straight"    ;
+    cpLut["OpenGrassRoadCheckpoint"          ] = "OpenGrassRoadStraight"        ;
+    cpLut["OpenGrassRoadCheckpointSlope2Up"  ] = "OpenGrassRoadSlope2Straight"  ;
 }
 
 void ReplaceCPs() {
