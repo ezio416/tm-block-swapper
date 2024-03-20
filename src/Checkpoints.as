@@ -4,17 +4,21 @@
 dictionary@ cpLut = dictionary();
 
 void InitCpLut() {
-    cpLut["RoadTechCheckpoint"       ] = "RoadTechStraight";
-    cpLut["RoadDirtCheckpoint"       ] = "RoadDirtStraight";
-    cpLut["RoadBumpCheckpoint"       ] = "RoadBumpStraight";
-    cpLut["RoadIceCheckpoint"        ] = "RoadIceStraight";
-    cpLut["RoadWaterCheckpoint"      ] = "RoadWaterStraight";
-    cpLut["PlatformWaterCheckpoint"  ] = "PlatformWaterBase";
-    cpLut["PlatformTechCheckpoint"   ] = "PlatformTechBase";
-    cpLut["PlatformDirtCheckpoint"   ] = "PlatformDirtBase";
-    cpLut["PlatformIceCheckpoint"    ] = "PlatformIceBase";
-    cpLut["PlatformGrassCheckpoint"  ] = "PlatformGrassBase";
-    cpLut["PlatformPlasticCheckpoint"] = "PlatformPlasticBase";
+    cpLut["RoadTechCheckpoint"       ] = "RoadTechStraight"     ;
+    cpLut["RoadDirtCheckpoint"       ] = "RoadDirtStraight"     ;
+    cpLut["RoadBumpCheckpoint"       ] = "RoadBumpStraight"     ;
+    cpLut["RoadIceCheckpoint"        ] = "RoadIceStraight"      ;
+    cpLut["RoadWaterCheckpoint"      ] = "RoadWaterStraight"    ;
+    cpLut["PlatformWaterCheckpoint"  ] = "PlatformWaterBase"    ;
+    cpLut["PlatformTechCheckpoint"   ] = "PlatformTechBase"     ;
+    cpLut["PlatformDirtCheckpoint"   ] = "PlatformDirtBase"     ;
+    cpLut["PlatformIceCheckpoint"    ] = "PlatformIceBase"      ;
+    cpLut["PlatformGrassCheckpoint"  ] = "PlatformGrassBase"    ;
+    cpLut["PlatformPlasticCheckpoint"] = "PlatformPlasticBase"  ;
+    cpLut["OpenTechRoadCheckpoint"   ] = "OpenTechRoadStraight" ;
+    cpLut["OpenDirtRoadCheckpoint"   ] = "OpenDirtRoadStraight" ;
+    cpLut["OpenIceRoadCheckpoint"    ] = "OpenIceRoadStraight"  ;
+    cpLut["OpenGrassRoadCheckpoint"  ] = "OpenGrassRoadStraight";
 }
 
 void ReplaceCPs() {
@@ -109,7 +113,7 @@ void ReplaceCPs() {
     trace("replaced " + total + " block" + (total == 1 ? "" : "s"));
 
     if (total > 0)
-        PMT.AutoSave();  // doesn't always save but at least fixes undo
+        PMT.AutoSave();  // usually doesn't save but at least fixes undo
 }
 
 // void RemoveCps() {
