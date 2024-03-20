@@ -33,9 +33,9 @@ void LoadMapItems() {
 
     ClearMapItems();
 
-    const uint64 now = Time::Now;
-
     for (uint i = 0; i < Map.AnchoredObjects.Length; i++) {
+        const uint64 now = Time::Now;
+
         if (now - lastYield > maxFrameTime) {
             lastYield = now;
             yield();

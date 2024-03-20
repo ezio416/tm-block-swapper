@@ -2,7 +2,8 @@
 // m 2024-03-19
 
 const dictionary@ cpLut = {
-    { "RoadTechCheckpoint", "RoadTechStraight" }
+    { "RoadTechCheckpoint", "RoadTechStraight" },
+    { "RoadDirtCheckpoint", "RoadDirtStraight" }
 };
 
 void ReplaceCPs() {
@@ -42,31 +43,47 @@ void ReplaceCPs() {
                 if (replacement !is null) {
                     const bool airBlockMode = AirBlockModeActive(Editor);
 
-                    bool airBlock = true;
+                    uint pillars = 0;
+                    string nonPillarName;
+
+                    const int3 coords = Nat3ToInt3(block.Coord);
+                    const CGameEditorPluginMap::ECardinalDirections dir = CGameEditorPluginMap::ECardinalDirections(block.BlockDir);
 
                     if (!block.IsGround) {
-                        const nat3 coordTosearch = block.Coord - nat3(0, 1, 0);
+                        CGameCtnBlock@ pillar;
 
-                        for (uint j = 0; j < Map.Blocks.Length; j++) {
-                            if (!Nat3EqNat3(Map.Blocks[j].Coord, coordTosearch))
-                                continue;
+                        for (uint j = coords.y - 1; j > 8; j--) {
+                            const int3 coordsCheck = int3(coords.x, j, coords.z);
+                            @pillar = PMT.GetBlock(coordsCheck);
 
-                            if (Map.Blocks[j].DescId.GetName().EndsWith("Pillar") && Map.Blocks[j].BlockDir == block.BlockDir) {
-                                airBlock = false;
+                            if (pillar is null)
                                 break;
+
+                            if (pillar.DescId.GetName().EndsWith("Pillar") && pillar.BlockDir == block.BlockDir) {
+                                nonPillarName = pillar.DescId.GetName().Replace("Pillar", "");
+                                pillars++;
                             }
                         }
                     }
 
-                    if ((airBlock && !airBlockMode) || (!airBlock && airBlockMode))
-                            Editor.ButtonAirBlockModeOnClick();
+                    if (!airBlockMode)
+                        Editor.ButtonAirBlockModeOnClick();
 
                     if (block.IsGhostBlock()) {
-                        PMT.RemoveGhostBlock(block.BlockModel, Nat3ToInt3(block.Coord), CGameEditorPluginMap::ECardinalDirections(block.BlockDir));
-                        PMT.PlaceGhostBlock(replacement, Nat3ToInt3(block.Coord), CGameEditorPluginMap::ECardinalDirections(block.BlockDir));
+                        PMT.RemoveGhostBlock(block.BlockModel, coords, dir);
+                        PMT.PlaceGhostBlock(replacement, coords, dir);
                     } else {
-                        PMT.RemoveBlockSafe(block.BlockModel, Nat3ToInt3(block.Coord), CGameEditorPluginMap::ECardinalDirections(block.BlockDir));
-                        PMT.PlaceBlock(replacement, Nat3ToInt3(block.Coord), CGameEditorPluginMap::ECardinalDirections(block.BlockDir));
+                        PMT.RemoveBlockSafe(block.BlockModel, coords, dir);
+                        PMT.PlaceBlock(replacement, coords, dir);
+
+                        if (pillars > 0) {
+                            CGameCtnBlockInfo@ pillarReplacement = PMT.GetBlockModelFromName(nonPillarName);
+                            if (pillarReplacement !is null) {
+                                for (int j = coords.y - 1; j >= coords.y - pillars; j--)
+                                    PMT.PlaceBlock(pillarReplacement, int3(coords.x, j, coords.z), dir);
+                            } else
+                                warn("pillarReplacement null: " + nonPillarName);
+                        }
                     }
 
                     if (airBlockMode != AirBlockModeActive(Editor))
@@ -79,6 +96,11 @@ void ReplaceCPs() {
     }
 
     trace("replaced " + total + " blocks");
+
+    if (total > 0) {
+        PMT.AutoSave();
+        trace("created new autosave");
+    }
 }
 
 // void RemoveCps() {

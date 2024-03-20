@@ -47,6 +47,7 @@ void Render() {
     if (UI::Begin(title, S_Enabled, UI::WindowFlags::None)) {
         UI::BeginTabBar("##tabs");
             Tab_Main();
+            Tab_Custom();
             Tab_CatalogObjects();
             Tab_MapBlocks();
             Tab_Offsets();
@@ -63,6 +64,67 @@ void Tab_Main() {
 
     if (UI::Button("Replace CPs"))
         startnew(ReplaceCPs);
+
+    UI::EndTabItem();
+}
+
+string blockName;
+CGameCtnBlockInfo@ selectedBlock;
+uint8 x;
+uint8 y;
+uint8 z;
+CGameEditorPluginMap::ECardinalDirections dir;
+bool ghost;
+
+void Tab_Custom() {
+    if (!UI::BeginTabItem("Custom"))
+        return;
+
+    CTrackMania@ App = cast<CTrackMania@>(GetApp());
+
+    CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree>(App.Editor);
+    if (Editor is null)
+        return;
+
+    CGameEditorPluginMapMapType@ PMT = Editor.PluginMapType;
+    if (PMT is null)
+        return;
+
+    blockName = UI::InputText("block name", blockName);
+
+    if (UI::Button("get block"))
+        @selectedBlock = PMT.GetBlockModelFromName(blockName);
+
+    UI::SameLine();
+    UI::Text("block: " + (selectedBlock is null ? "null" : string(selectedBlock.Name)));
+
+    if (selectedBlock !is null) {
+        x = UI::InputInt("X", x);
+        y = UI::InputInt("Y", y);
+        z = UI::InputInt("Z", z);
+
+        if (UI::BeginCombo("direction", tostring(dir))) {
+            if (UI::Selectable("North", dir == CGameEditorPluginMap::ECardinalDirections::North))
+                dir = CGameEditorPluginMap::ECardinalDirections::North;
+            if (UI::Selectable("East", dir == CGameEditorPluginMap::ECardinalDirections::East))
+                dir = CGameEditorPluginMap::ECardinalDirections::East;
+            if (UI::Selectable("South", dir == CGameEditorPluginMap::ECardinalDirections::South))
+                dir = CGameEditorPluginMap::ECardinalDirections::South;
+            if (UI::Selectable("West", dir == CGameEditorPluginMap::ECardinalDirections::West))
+                dir = CGameEditorPluginMap::ECardinalDirections::West;
+
+            UI::EndCombo();
+        }
+
+        ghost = UI::Checkbox("ghost mode", ghost);
+
+        if (UI::Button("place")) {
+            if (ghost)
+                PMT.PlaceGhostBlock(selectedBlock, int3(x, y, z), dir);
+            else
+                PMT.PlaceBlock(selectedBlock, int3(x, y, z), dir);
+        }
+    }
 
     UI::EndTabItem();
 }

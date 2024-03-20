@@ -1,9 +1,11 @@
 // c 2024-03-19
 // m 2024-03-19
 
-dictionary@ catalogObjects        = dictionary();
-bool        loadingCatalogObjects = false;
-const uint  objectsChapterIndex   = 3;
+CGameCtnArticle@[] catalogfiltered;
+dictionary@        catalogObjects        = dictionary();
+string             catalogSearch;
+bool               loadingCatalogObjects = false;
+const uint         objectsChapterIndex   = 3;
 
 CGameCtnArticle@ GetCatalogObject(const string &in key) {
     if (!catalogObjects.Exists(key))
@@ -24,9 +26,9 @@ void LoadCatalogObjects() {
 
     CTrackMania@ App = cast<CTrackMania@>(GetApp());
 
-    const uint64 now = Time::Now;
-
     for (uint i = 0; i < App.GlobalCatalog.Chapters[objectsChapterIndex].Articles.Length; i++) {
+        const uint64 now = Time::Now;
+
         if (now - lastYield > maxFrameTime) {
             lastYield = now;
             yield();
@@ -37,6 +39,8 @@ void LoadCatalogObjects() {
         if (Article.IdentAuthor.Value == nadeoAuthorId)
             catalogObjects[Article.Name] = @Article;
     }
+
+    FilterCatalog();
 
     loadingCatalogObjects = false;
 }
@@ -53,6 +57,25 @@ void Tab_CatalogObjects() {
     UI::SameLine();
     UI::Text("Loaded Objects: " + catalogObjects.GetSize());
 
+    catalogSearch = UI::InputText("###search-catalog", catalogSearch);
+
+    UI::BeginDisabled(catalogSearch.Length == 0);
+        UI::SameLine();
+        if (UI::Button("search"))
+            startnew(FilterCatalog);
+
+        UI::SameLine();
+        if (UI::Button("clear")) {
+            catalogSearch = "";
+            startnew(FilterCatalog);
+        }
+    UI::EndDisabled();
+
+    if (catalogSearch.Length > 0) {
+        UI::SameLine();
+        UI::Text("results: " + catalogfiltered.Length);
+    }
+
     if (UI::BeginTable("##table-catalog", 4, UI::TableFlags::RowBg | UI::TableFlags::ScrollY)) {
         UI::PushStyleColor(UI::Col::TableRowBgAlt, rowBgAltColor);
 
@@ -63,12 +86,10 @@ void Tab_CatalogObjects() {
         UI::TableSetupColumn("wp type",  UI::TableColumnFlags::WidthFixed, scale * 90.0f);
         UI::TableHeadersRow();
 
-        string[]@ keys = catalogObjects.GetKeys();
-
-        UI::ListClipper clipper(keys.Length);
+        UI::ListClipper clipper(catalogfiltered.Length);
         while (clipper.Step()) {
             for (int i = clipper.DisplayStart; i < clipper.DisplayEnd; i++) {
-                CGameCtnArticle@ article = cast<CGameCtnArticle@>(catalogObjects[keys[i]]);
+                CGameCtnArticle@ article = catalogfiltered[i];
 
                 UI::TableNextRow();
 
@@ -95,4 +116,24 @@ void Tab_CatalogObjects() {
     }
 
     UI::EndTabItem();
+}
+
+void FilterCatalog() {
+    catalogfiltered = {};
+
+    string[]@ keys = catalogObjects.GetKeys();
+
+    for (uint i = 0; i < keys.Length; i++) {
+        const uint64 now = Time::Now;
+
+        if (now - lastYield > maxFrameTime) {
+            lastYield = now;
+            yield();
+        }
+
+        CGameCtnArticle@ article = cast<CGameCtnArticle@>(catalogObjects[keys[i]]);
+
+        if (catalogSearch.Length == 0 || string(article.Name).ToLower().Contains(catalogSearch.ToLower()))
+            catalogfiltered.InsertLast(article);
+    }
 }
