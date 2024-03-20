@@ -76,10 +76,25 @@ void ReplaceCPs() {
 
     LoadMapBlocks();
 
+    for (uint i = 0; i < mapBlocksCpRing.Length; i++) {
+        YieldIfNeeded();
+
+        trace("removing ring CP (" + (i + 1) + " / " + mapBlocksCpRing.Length + ")");
+
+        Block@ block = mapBlocksCpRing[i];
+
+        if (block.ghost)
+            PMT.RemoveGhostBlock(block.block.BlockModel, block.coord, CGameEditorPluginMap::ECardinalDirections(block.direction));
+        else
+            PMT.RemoveBlockSafe(block.block.BlockModel, block.coord, CGameEditorPluginMap::ECardinalDirections(block.direction));
+
+        total++;
+    }
+
     for (uint i = 0; i < mapBlocksCp.Length; i++) {
         YieldIfNeeded();
 
-        trace("replacing block (" + (i + 1) + " / " + mapBlocksCp.Length + ")");
+        trace("replacing CP (" + (i + 1) + " / " + mapBlocksCp.Length + ")");
 
         Block@ block = mapBlocksCp[i];
 
@@ -170,7 +185,7 @@ void ReplaceCPs() {
         }
     }
 
-    trace("replaced " + total + " block" + (total == 1 ? "" : "s") + " after " + (Time::Now - start) + "ms (" + Time::Format(Time::Now - start) + ")");
+    trace("removed/replaced " + total + " block" + (total == 1 ? "" : "s") + " after " + (Time::Now - start) + "ms (" + Time::Format(Time::Now - start) + ")");
 
     if (total > 0)
         PMT.AutoSave();  // usually doesn't save but at least fixes undo
@@ -178,8 +193,8 @@ void ReplaceCPs() {
     replacingCps = false;
 }
 
-// void RemoveCps() {
-//     print("removing CPs");
+// void RemoveCpItems() {
+//     print("removing CP items");
 
 //     CTrackMania@ App = cast<CTrackMania@>(GetApp());
 
@@ -193,13 +208,14 @@ void ReplaceCPs() {
 
 //     uint total = 0;
 
-//     // CGameCtnChallenge@ Map = App.RootMap;
+//     LoadMapItems();
+
 //     CGameCtnChallenge@ Map = Editor.Challenge;
 //     if (Map is null)
 //         return;
 
-//     for (uint i = 0; i < blocks.Length; i++) {
-//         Block@ block = blocks[i];
+//     for (uint i = 0; i < mapItems.Length; i++) {
+//         Item@ item = mapItems[i];
 
 //         if (block.block is null)
 //             continue;

@@ -4,6 +4,7 @@
 bool     loadingMapBlocks = false;
 Block@[] mapBlocks;
 Block@[] mapBlocksCp;
+Block@[] mapBlocksCpRing;
 
 void ClearMapBlocks() {
     if (mapBlocks.Length == 0 && mapBlocksCp.Length == 0)
@@ -52,8 +53,14 @@ void LoadMapBlocks() {
         if (block.id.Value != stadiumGrassId) {
             mapBlocks.InsertLast(block);
 
-            if (cpLut.Exists(block.id.GetName()))
-                mapBlocksCp.InsertLast(block);
+            if (!block.free) {
+                const string name = block.id.GetName();
+
+                if (cpLut.Exists(name))
+                    mapBlocksCp.InsertLast(block);
+                else if (name == "GateCheckpoint")
+                    mapBlocksCpRing.InsertLast(block);
+            }
         }
     }
 
