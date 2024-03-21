@@ -60,21 +60,21 @@ void LoadMapBlocks() {
             if (!block.free) {
                 const string name = block.name;
 
-                if (cpLut.Exists(name))
+                if (LUT["checkpoint"].HasKey(name))
                     mapBlocksCp.InsertLast(block);
                 else if (name == "GateCheckpoint")
                     mapBlocksCpRing.InsertLast(block);
-                else if (finLut.Exists(name))
+                else if (LUT["finish"].HasKey(name))
                     mapBlocksFin.InsertLast(block);
                 else if (name == "GateFinish" || name == "GateExpandableFinish")
                     mapBlocksFinRingGate.InsertLast(block);
-                else if (multilapLut.Exists(name))
+                else if (LUT["multilap"].HasKey(name))
                     mapBlocksMultilap.InsertLast(block);
             }
         }
     }
 
-    trace("loaded " + mapBlocks.Length + " blocks (" + mapBlocksCp.Length + " swappable) after " + (Time::Now - start) + "ms (" + Time::Format(Time::Now - start) + ")");
+    trace("loaded " + mapBlocks.Length + " block" + (mapBlocks.Length == 1 ? "" : "s") + " (" + mapBlocksCp.Length + " swappable) after " + (Time::Now - start) + "ms (" + Time::Format(Time::Now - start) + ")");
 
     loadingMapBlocks = false;
 }

@@ -17,6 +17,9 @@ void LoadMapItems() {
 
     loadingMapItems = true;
 
+    const uint64 start = Time::Now;
+    trace("loading map items");
+
     CTrackMania@ App = cast<CTrackMania@>(GetApp());
 
     CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree>(App.Editor);
@@ -38,6 +41,8 @@ void LoadMapItems() {
 
         mapItems.InsertLast(Item(Map.AnchoredObjects[i]));
     }
+
+    trace("loaded " + mapItems.Length + " item" + (mapItems.Length == 1 ? "" : "s") + " after " + (Time::Now - start) + "ms (" + Time::Format(Time::Now - start) + ")");
 
     loadingMapItems = false;
 }

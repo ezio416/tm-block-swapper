@@ -1,57 +1,22 @@
 // c 2024-03-19
 // m 2024-03-20
 
-dictionary@ cpLut         = dictionary();
-dictionary@ finLut        = dictionary();
-dictionary@ multilapLut   = dictionary();
-bool        replacing     = false;
-bool        stopReplacing = false;
+Json::Value@ LUT;
+bool         replacing     = false;
+bool         stopReplacing = false;
 
-void InitLUTs() {
-    cpLut["RoadTechCheckpoint"               ] = "RoadTechStraight"             ;
-    cpLut["RoadTechCheckpointSlopeUp"        ] = "RoadTechSlopeStraight"        ;
-    cpLut["RoadTechCheckpointTiltRight"      ] = "RoadTechTiltStraight"         ;
-    cpLut["RoadDirtCheckpoint"               ] = "RoadDirtStraight"             ;
-    cpLut["RoadDirtCheckpointSlopeUp"        ] = "RoadDirtSlopeStraight"        ;
-    cpLut["RoadDirtCheckpointTiltRight"      ] = "RoadDirtTiltStraight"         ;
-    cpLut["RoadBumpCheckpoint"               ] = "RoadBumpStraight"             ;
-    cpLut["RoadBumpCheckpointSlopeUp"        ] = "RoadBumpSlopeStraight"        ;
-    cpLut["RoadBumpCheckpointTiltRight"      ] = "RoadBumpTiltStraight"         ;
-    cpLut["RoadIceCheckpoint"                ] = "RoadIceStraight"              ;
-    cpLut["RoadIceCheckpointSlopeUp"         ] = "RoadIceSlopeStraight"         ;
-    cpLut["RoadIceWithWallCheckpointLeft"    ] = "RoadIceWithWallStraight"      ;
-    cpLut["RoadWaterCheckpoint"              ] = "RoadWaterStraight"            ;
-    cpLut["PlatformWaterCheckpoint"          ] = "PlatformWaterBase"            ;
-    cpLut["PlatformTechCheckpoint"           ] = "PlatformTechBase"             ;
-    cpLut["PlatformTechCheckpointSlope2Up"   ] = "PlatformTechSlope2Straight"   ;
-    cpLut["PlatformDirtCheckpoint"           ] = "PlatformDirtBase"             ;
-    cpLut["PlatformDirtCheckpointSlope2Up"   ] = "PlatformDirtSlope2Straight"   ;
-    cpLut["PlatformIceCheckpoint"            ] = "PlatformIceBase"              ;
-    cpLut["PlatformIceCheckpointSlope2Up"    ] = "PlatformIceSlope2Straight"    ;
-    cpLut["PlatformGrassCheckpoint"          ] = "PlatformGrassBase"            ;
-    cpLut["PlatformGrassCheckpointSlope2Up"  ] = "PlatformGrassSlope2Straight"  ;
-    cpLut["PlatformPlasticCheckpoint"        ] = "PlatformPlasticBase"          ;
-    cpLut["PlatformPlasticCheckpointSlope2Up"] = "PlatformPlasticSlope2Straight";
-    cpLut["OpenTechRoadCheckpoint"           ] = "OpenTechRoadStraight"         ;
-    cpLut["OpenTechRoadCheckpointSlope2Up"   ] = "OpenTechRoadSlope2Straight"   ;
-    cpLut["OpenDirtRoadCheckpoint"           ] = "OpenDirtRoadStraight"         ;
-    cpLut["OpenDirtRoadCheckpointSlope2Up"   ] = "OpenDirtRoadSlope2Straight"   ;
-    cpLut["OpenIceRoadCheckpoint"            ] = "OpenIceRoadStraight"          ;
-    cpLut["OpenIceRoadCheckpointSlope2Up"    ] = "OpenIceRoadSlope2Straight"    ;
-    cpLut["OpenGrassRoadCheckpoint"          ] = "OpenGrassRoadStraight"        ;
-    cpLut["OpenGrassRoadCheckpointSlope2Up"  ] = "OpenGrassRoadSlope2Straight"  ;
+void InitLUT() {
+    @LUT = Json::FromFile("src/LUT.json");
 
-    finLut["RoadTechFinish"       ] = "RoadTechStraight"   ;
-    finLut["RoadDirtFinish"       ] = "RoadDirtStraight"   ;
-    finLut["RoadBumpFinish"       ] = "RoadBumpStraight"   ;
-    finLut["RoadIceFinish"        ] = "RoadIceStraight"    ;
-    finLut["RoadWaterFinish"      ] = "RoadWaterStraight"  ;
-    finLut["PlatformWaterFinish"  ] = "PlatformWaterBase"  ;
-    finLut["PlatformTechFinish"   ] = "PlatformTechBase"   ;
-    finLut["PlatformDirtFinish"   ] = "PlatformDirtBase"   ;
-    finLut["PlatformIceFinish"    ] = "PlatformIceBase"    ;
-    finLut["PlatformGrassFinish"  ] = "PlatformGrassBase"  ;
-    finLut["PlatformPlasticFinish"] = "PlatformPlasticBase";
+    if (
+        LUT.GetType() != Json::Type::Object
+        || !LUT.HasKey("checkpoint")
+        || !LUT.HasKey("finish")
+        || !LUT.HasKey("multilap")
+    ) {
+        error("LUT.json is invalid or missing");
+        @LUT = null;
+    }
 }
 
 void ReplaceCpBlocks() {
@@ -93,7 +58,7 @@ void ReplaceCpBlocks() {
         const bool airBlockModePre = AirBlockModeActive(Editor);
         const CGameEditorPluginMap::EMapElemColor colorPre = PMT.NextMapElemColor;
 
-        if (ReplaceBlock(block, Editor, PMT, cpLut, airBlockModePre))
+        if (ReplaceBlock(block, Editor, PMT, LUT["checkpoint"], airBlockModePre))
             total++;
 
         if (airBlockModePre != AirBlockModeActive(Editor))
@@ -116,7 +81,7 @@ void ReplaceCpBlocks() {
     replacing = false;
 }
 
-bool ReplaceBlock(Block@ block, CGameCtnEditorFree@ Editor, CSmEditorPluginMapType@ PMT, dictionary@ lut, bool airBlockModePre) {
+bool ReplaceBlock(Block@ block, CGameCtnEditorFree@ Editor, CSmEditorPluginMapType@ PMT, Json::Value@ lut, bool airBlockModePre) {
     if (block is null || PMT is null || lut is null)
         return false;
 
@@ -195,12 +160,11 @@ bool ReplaceBlock(Block@ block, CGameCtnEditorFree@ Editor, CSmEditorPluginMapTy
             if (pillarReplacement !is null) {
                 const int3 pillarCoord = block.coord - int3(0, 1, 0);
 
-                if (!PMT.PlaceBlock(pillarReplacement, pillarCoord, dir)) {
-                    warn("failed to place pillar replacement block at " + tostring(pillarCoord));
-                    return false;
+                if (!PMT.PlaceBlock(pillarReplacement, pillarCoord, dir)) {  // this usually succeeds but still returns false?
+                    // warn("failed to place top pillar replacement block at " + tostring(pillarCoord));
                 }
             } else
-                warn("pillar replacement block not found: " + nonPillarName);
+                warn("top pillar replacement block not found: " + nonPillarName);
 
         } else if (pillars > 0) {
             CGameCtnBlockInfo@ pillarReplacement = PMT.GetBlockModelFromName(nonPillarName);
@@ -211,15 +175,11 @@ bool ReplaceBlock(Block@ block, CGameCtnEditorFree@ Editor, CSmEditorPluginMapTy
 
                     const int3 pillarCoord = int3(block.coord.x, j, block.coord.z);
 
-                    if (!PMT.PlaceBlock(pillarReplacement, pillarCoord, dir)) {
+                    if (!PMT.PlaceBlock(pillarReplacement, pillarCoord, dir))
                         warn("failed to place pillar replacement block at " + tostring(pillarCoord));
-                        return false;
-                    }
                 }
-            } else {
+            } else
                 warn("pillar replacement block not found: " + nonPillarName);
-                return false;
-            }
         }
     }
 

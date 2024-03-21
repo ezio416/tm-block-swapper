@@ -11,7 +11,7 @@ void OnDestroyed() { FreeAllAllocated(); }
 void OnDisabled()  { FreeAllAllocated(); }
 
 void Main() {
-    InitLUTs();
+    InitLUT();
 }
 
 void RenderMenu() {
@@ -24,6 +24,8 @@ void Render() {
         !S_Enabled
         || (S_HideWithGame && !UI::IsGameUIVisible())
         || (S_HideWithOP && !UI::IsOverlayShown())
+        || LUT is null
+        || LUT.GetType() != Json::Type::Object
     )
         return;
 
