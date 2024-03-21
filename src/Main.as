@@ -142,10 +142,15 @@ void Tab_Custom() {
         ghost = UI::Checkbox("ghost mode", ghost);
 
         if (UI::Button("place")) {
-            if (ghost)
-                PMT.PlaceGhostBlock(selectedBlock, int3(x, y, z), dir);
-            else
-                PMT.PlaceBlock(selectedBlock, int3(x, y, z), dir);
+            const int3 coord = int3(x, y, z);
+
+            if (ghost) {
+                if (!PMT.PlaceGhostBlock(selectedBlock, coord, dir))
+                    warn("failed to place ghost block at " + tostring(coord));
+            } else {
+                if (!PMT.PlaceBlock(selectedBlock, int3(x, y, z), dir))
+                    warn("failed to place block at " + tostring(coord));
+            }
         }
     }
 
