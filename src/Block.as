@@ -40,4 +40,8 @@ class Block {
             freeRotationDeg = Vec3RadToDeg(freeRotationRad);
         }
     }
+
+    const string get_name() {
+        return id.GetName();
+    }
 }

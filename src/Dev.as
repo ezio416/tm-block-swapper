@@ -62,7 +62,7 @@ void Tab_Offsets() {
         for (uint i = 0; i < mapBlocks.Length; i++) {
             Block@ block = mapBlocks[i];
 
-            if (UI::BeginTabItem(block.id.GetName() + " " + i)) {
+            if (UI::BeginTabItem(block.name + " " + i)) {
                 Table_Offsets(block.block);
                 UI::EndTabItem();
             }

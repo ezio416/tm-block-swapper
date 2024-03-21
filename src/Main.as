@@ -61,12 +61,12 @@ void Tab_Main() {
     if (!UI::BeginTabItem("Main"))
         return;
 
-    UI::BeginDisabled(replacingCps);
+    UI::BeginDisabled(replacing);
     if (UI::Button("Replace CP blocks"))
         startnew(ReplaceCPs);
     UI::EndDisabled();
 
-    UI::BeginDisabled(stopReplacing || !replacingCps);
+    UI::BeginDisabled(stopReplacing || !replacing);
     UI::SameLine();
     if (UI::Button("STOP"))
         stopReplacing = true;

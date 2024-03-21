@@ -54,7 +54,7 @@ void LoadMapBlocks() {
             mapBlocks.InsertLast(block);
 
             if (!block.free) {
-                const string name = block.id.GetName();
+                const string name = block.name;
 
                 if (cpLut.Exists(name))
                     mapBlocksCp.InsertLast(block);
@@ -108,10 +108,19 @@ void Tab_MapBlocks() {
 
                 UI::TableNextRow();
 
+                const string name = block.name;
+
                 UI::TableNextColumn();
                 UI::BeginDisabled(block.block is null);
-                if (UI::Selectable(block.id.GetName() + "##" + i, false, UI::SelectableFlags::SpanAllColumns))
-                    ExploreNod(block.id.GetName(), block.block);
+                if (UI::Selectable(name + "##" + i, false))
+                    SetClipboard(name);
+                if (UI::IsItemHovered()) {
+                    UI::BeginTooltip();
+                        UI::Text("right-click to explore nod");
+                    UI::EndTooltip();
+                    if (UI::IsMouseClicked(UI::MouseButton::Right))
+                        ExploreNod(name, block.block);
+                }
                 UI::EndDisabled();
 
                 UI::TableNextColumn();

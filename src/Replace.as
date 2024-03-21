@@ -3,7 +3,7 @@
 
 dictionary@ cpLut         = dictionary();
 dictionary@ finLut        = dictionary();
-bool        replacingCps  = false;
+bool        replacing     = false;
 bool        stopReplacing = false;
 
 void InitLUTs() {
@@ -40,18 +40,24 @@ void InitLUTs() {
     cpLut["OpenGrassRoadCheckpoint"          ] = "OpenGrassRoadStraight"        ;
     cpLut["OpenGrassRoadCheckpointSlope2Up"  ] = "OpenGrassRoadSlope2Straight"  ;
 
-    finLut["RoadTechFinish" ] = "RoadTechStraight" ;
-    finLut["RoadDirtFinish" ] = "RoadDirtStraight" ;
-    finLut["RoadBumpFinish" ] = "RoadBumpStraight" ;
-    finLut["RoadIceFinish"  ] = "RoadIceStraight"  ;
-    finLut["RoadWaterFinish"] = "RoadWaterStraight";
+    finLut["RoadTechFinish"       ] = "RoadTechStraight"   ;
+    finLut["RoadDirtFinish"       ] = "RoadDirtStraight"   ;
+    finLut["RoadBumpFinish"       ] = "RoadBumpStraight"   ;
+    finLut["RoadIceFinish"        ] = "RoadIceStraight"    ;
+    finLut["RoadWaterFinish"      ] = "RoadWaterStraight"  ;
+    finLut["PlatformWaterFinish"  ] = "PlatformWaterBase"  ;
+    finLut["PlatformTechFinish"   ] = "PlatformTechBase"   ;
+    finLut["PlatformDirtFinish"   ] = "PlatformDirtBase"   ;
+    finLut["PlatformIceFinish"    ] = "PlatformIceBase"    ;
+    finLut["PlatformGrassFinish"  ] = "PlatformGrassBase"  ;
+    finLut["PlatformPlasticFinish"] = "PlatformPlasticBase";
 }
 
 void ReplaceCPs() {
-    if (replacingCps)
+    if (replacing)
         return;
 
-    replacingCps = true;
+    replacing = true;
 
     const uint64 start = Time::Now;
     trace("removing/replacing CP blocks");
@@ -60,19 +66,19 @@ void ReplaceCPs() {
 
     CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree@>(App.Editor);
     if (Editor is null) {
-        replacingCps = false;
+        replacing = false;
         return;
     }
 
     CGameCtnChallenge@ Map = Editor.Challenge;
     if (Map is null) {
-        replacingCps = false;
+        replacing = false;
         return;
     }
 
     CSmEditorPluginMapType@ PMT = cast<CSmEditorPluginMapType@>(Editor.PluginMapType);
     if (PMT is null) {
-        replacingCps = false;
+        replacing = false;
         return;
     }
 
@@ -102,7 +108,7 @@ void ReplaceCPs() {
 
         Block@ block = mapBlocksCp[i];
 
-        const string name = block.id.GetName();
+        const string name = block.name;
 
         CGameCtnBlockInfo@ replacement = PMT.GetBlockModelFromName(string(cpLut[name]));
         if (replacement is null) {
@@ -194,7 +200,7 @@ void ReplaceCPs() {
     if (total > 0)
         PMT.AutoSave();  // usually doesn't save but at least fixes undo
 
-    replacingCps = false;
+    replacing = false;
 }
 
 // void RemoveCpItems() {

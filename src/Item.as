@@ -31,4 +31,8 @@ class Item {
             waypointType = item.ItemModel.WaypointType;
         }
     }
+
+    const string get_name() {
+        return id.GetName();
+    }
 }

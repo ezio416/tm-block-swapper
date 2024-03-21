@@ -102,10 +102,19 @@ void Tab_MapItems() {
 
                 UI::TableNextRow();
 
+                const string name = item.name;
+
                 UI::TableNextColumn();
                 UI::BeginDisabled(item.item is null);
-                if (UI::Selectable(item.id.GetName(), false, UI::SelectableFlags::SpanAllColumns))
-                    ExploreNod(item.id.GetName(), item.item);
+                if (UI::Selectable(name + "##" + i, false))
+                    SetClipboard(name);
+                if (UI::IsItemHovered()) {
+                    UI::BeginTooltip();
+                        UI::Text("right-click to explore nod");
+                    UI::EndTooltip();
+                    if (UI::IsMouseClicked(UI::MouseButton::Right))
+                        ExploreNod(name, item.item);
+                }
                 UI::EndDisabled();
 
                 UI::TableNextColumn();
