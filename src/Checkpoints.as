@@ -54,7 +54,7 @@ void ReplaceCPs() {
 
     CTrackMania@ App = cast<CTrackMania@>(GetApp());
 
-    CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree>(App.Editor);
+    CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree@>(App.Editor);
     if (Editor is null) {
         replacingCps = false;
         return;

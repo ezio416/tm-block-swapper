@@ -72,6 +72,9 @@ void Tab_Main() {
         stopReplacing = true;
     UI::EndDisabled();
 
+    if (UI::Button("Make All Items Flying"))
+        MakeAllItemsFlying();
+
     UI::EndTabItem();
 }
 
@@ -89,7 +92,7 @@ void Tab_Custom() {
 
     CTrackMania@ App = cast<CTrackMania@>(GetApp());
 
-    CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree>(App.Editor);
+    CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree@>(App.Editor);
     if (Editor is null)
         return;
 

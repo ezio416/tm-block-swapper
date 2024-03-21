@@ -1,5 +1,5 @@
 // c 2024-03-19
-// m 2024-03-19
+// m 2024-03-20
 
 class Item {
     CGameCtnAnchoredObject@ item;
@@ -8,8 +8,10 @@ class Item {
     MwId                                  author;
     CGameCtnAnchoredObject::EMapElemColor color;
     int3                                  coord;
+    bool                                  flying;
     MwId                                  id;
-    vec3                                  orientation;
+    vec3                                  rotationDeg;
+    vec3                                  rotationRad;
     CGameItemModel::EnumWaypointType      waypointType;
 
     Item() { }
@@ -19,7 +21,9 @@ class Item {
         absPosition = item.AbsolutePositionInMap;
         color       = item.MapElemColor;
         coord       = Nat3ToInt3(item.BlockUnitCoord);
-        orientation = vec3(item.Yaw, item.Pitch, item.Roll);
+        flying      = item.IsFlying;
+        rotationRad = vec3(item.Yaw, item.Pitch, item.Roll);
+        rotationDeg = Vec3RadToDeg(rotationRad);
 
         if (item.ItemModel !is null) {
             author       = item.ItemModel.Author;

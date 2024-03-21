@@ -2,12 +2,23 @@
 // m 2024-03-20
 
 const uint16 offsetAirBlockMode = GetMemberOffset("CGameCtnEditorFree", "GridColor") - 0x34;  // 0xBD4 - 0xC08 (GridColor)
+const uint16 offsetFreeBlockPos = GetMemberOffset("CGameCtnBlock", "Dir") + 0x8;
+const uint16 offsetFreeBlockRot = offsetFreeBlockPos + 0xC;
 
 bool AirBlockModeActive(CGameCtnEditorFree@ Editor) {
     if (Editor is null)
         return false;
 
     return Dev::GetOffsetUint8(Editor, offsetAirBlockMode) > 0;
+}
+
+vec3 GetFreeBlockPosition(CGameCtnBlock@ block) {
+    return Dev::GetOffsetVec3(block, offsetFreeBlockPos);
+}
+
+vec3 GetFreeBlockRotation(CGameCtnBlock@ block) {
+    const vec3 rot = Dev::GetOffsetVec3(block, offsetFreeBlockRot);
+    return vec3(rot.y, rot.x, rot.z);
 }
 
 uint16 GetMemberOffset(const string &in className, const string &in memberName) {
@@ -66,7 +77,7 @@ void Tab_Offsets() {
 }
 
 const uint[] knownOffsets = {
-    40, 72, 96, 100, 104, 144, 560, 808
+    40, 72, 96, 100, 104, 108, 116, 120, 124, 128, 132, 136, 144, 560, 808
 };
 
 void Table_Offsets(CMwNod@ nod) {
@@ -204,6 +215,10 @@ string Round(bool b) {
 
 string Round(int num) {
     return (num == 0 ? WHITE : num < 0 ? RED : GREEN) + Math::Abs(num);
+}
+
+string Round(int3 nums) {
+    return Round(nums.x) + "\\$G , " + Round(nums.y) + "\\$G , " + Round(nums.z);
 }
 
 string Round(float num, uint precision = S_Precision) {

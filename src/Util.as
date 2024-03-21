@@ -37,10 +37,14 @@ const int3 Nat3ToInt3(const nat3 coord) {
     return int3(coord.x, coord.y, coord.z);
 }
 
-bool Nat3EqNat3(const nat3 one, const nat3 two) {
+const bool Nat3EqNat3(const nat3 one, const nat3 two) {
     return one.x == two.x
         && one.y == two.y
         && one.z == two.z;
+}
+
+const vec3 Vec3RadToDeg(const vec3 vec) {
+    return vec3(Math::ToDeg(vec.x), Math::ToDeg(vec.y), Math::ToDeg(vec.z));
 }
 
 void YieldIfNeeded(const int i = 0) {

@@ -25,7 +25,7 @@ void LoadMapBlocks() {
 
     CTrackMania@ App = cast<CTrackMania@>(GetApp());
 
-    CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree>(App.Editor);
+    CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree@>(App.Editor);
     if (Editor is null) {
         loadingMapBlocks = false;
         return;
@@ -81,21 +81,24 @@ void Tab_MapBlocks() {
     UI::SameLine();
     UI::Text("Loaded Blocks: " + mapBlocks.Length);
 
-    if (UI::BeginTable("##table-map-blocks", 11, UI::TableFlags::RowBg | UI::TableFlags::ScrollY)) {
+    if (UI::BeginTable("##table-map-blocks", 14, UI::TableFlags::RowBg | UI::TableFlags::ScrollY)) {
         UI::PushStyleColor(UI::Col::TableRowBgAlt, rowBgAltColor);
 
         UI::TableSetupScrollFreeze(0, 1);
         UI::TableSetupColumn("id");
-        UI::TableSetupColumn("id value", UI::TableColumnFlags::WidthFixed, scale * 90.0f);
-        UI::TableSetupColumn("author",   UI::TableColumnFlags::WidthFixed, scale * 50.0f);
-        UI::TableSetupColumn("color",    UI::TableColumnFlags::WidthFixed, scale * 50.0f);
-        UI::TableSetupColumn("dir",      UI::TableColumnFlags::WidthFixed, scale * 50.0f);
-        UI::TableSetupColumn("ghost",    UI::TableColumnFlags::WidthFixed, scale * 50.0f);
-        UI::TableSetupColumn("ground",   UI::TableColumnFlags::WidthFixed, scale * 50.0f);
-        UI::TableSetupColumn("variant",  UI::TableColumnFlags::WidthFixed, scale * 50.0f);
-        UI::TableSetupColumn("free",     UI::TableColumnFlags::WidthFixed, scale * 50.0f);
-        UI::TableSetupColumn("coord",    UI::TableColumnFlags::WidthFixed, scale * 80.0f);
-        UI::TableSetupColumn("wp type",  UI::TableColumnFlags::WidthFixed, scale * 90.0f);
+        UI::TableSetupColumn("id value",   UI::TableColumnFlags::WidthFixed, scale * 80.0f);
+        UI::TableSetupColumn("author",     UI::TableColumnFlags::WidthFixed, scale * 50.0f);
+        UI::TableSetupColumn("color",      UI::TableColumnFlags::WidthFixed, scale * 50.0f);
+        UI::TableSetupColumn("dir",        UI::TableColumnFlags::WidthFixed, scale * 40.0f);
+        UI::TableSetupColumn("ghost",      UI::TableColumnFlags::WidthFixed, scale * 35.0f);
+        UI::TableSetupColumn("ground",     UI::TableColumnFlags::WidthFixed, scale * 50.0f);
+        UI::TableSetupColumn("variant",    UI::TableColumnFlags::WidthFixed, scale * 45.0f);
+        UI::TableSetupColumn("free",       UI::TableColumnFlags::WidthFixed, scale * 35.0f);
+        UI::TableSetupColumn("coord",      UI::TableColumnFlags::WidthFixed, scale * 80.0f);
+        UI::TableSetupColumn("freePos",    UI::TableColumnFlags::WidthFixed, scale * 170.0f);
+        UI::TableSetupColumn("freeRotRad", UI::TableColumnFlags::WidthFixed, scale * 130.0f);
+        UI::TableSetupColumn("freeRotDeg", UI::TableColumnFlags::WidthFixed, scale * 160.0f);
+        UI::TableSetupColumn("wp type",    UI::TableColumnFlags::WidthFixed, scale * 80.0f);
         UI::TableHeadersRow();
 
         UI::ListClipper clipper(mapBlocks.Length);
@@ -124,19 +127,28 @@ void Tab_MapBlocks() {
                 UI::Text(tostring(block.direction));
 
                 UI::TableNextColumn();
-                UI::Text(tostring(block.ghost));
+                UI::Text(Round(block.ghost));
 
                 UI::TableNextColumn();
-                UI::Text(tostring(block.ground));
+                UI::Text(Round(block.ground));
 
                 UI::TableNextColumn();
-                UI::Text(tostring(block.variant));
+                UI::Text(Round(block.variant));
 
                 UI::TableNextColumn();
-                UI::Text(tostring(block.free));
+                UI::Text(Round(block.free));
 
                 UI::TableNextColumn();
-                UI::Text(tostring(block.coord));
+                UI::Text(Round(block.coord));
+
+                UI::TableNextColumn();
+                UI::Text(Round(block.freePosition));
+
+                UI::TableNextColumn();
+                UI::Text(Round(block.freeRotationRad));
+
+                UI::TableNextColumn();
+                UI::Text(Round(block.freeRotationDeg));
 
                 UI::TableNextColumn();
                 UI::Text(tostring(block.waypointType));
