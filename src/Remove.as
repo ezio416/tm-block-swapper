@@ -22,13 +22,6 @@ void RemoveCpBlocks() {
         return;
     }
 
-    CGameCtnChallenge@ Map = Editor.Challenge;
-    if (Map is null) {
-        warn("can't remove CP blocks - Map is null");
-        removing = false;
-        return;
-    }
-
     CSmEditorPluginMapType@ PMT = cast<CSmEditorPluginMapType@>(Editor.PluginMapType);
     if (PMT is null) {
         warn("can't remove CP blocks - PMT is null");

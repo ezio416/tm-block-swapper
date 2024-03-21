@@ -72,13 +72,6 @@ void ReplaceCpBlocks() {
         return;
     }
 
-    CGameCtnChallenge@ Map = Editor.Challenge;
-    if (Map is null) {
-        warn("can't replace CP blocks - Map is null");
-        replacing = false;
-        return;
-    }
-
     CSmEditorPluginMapType@ PMT = cast<CSmEditorPluginMapType@>(Editor.PluginMapType);
     if (PMT is null) {
         warn("can't replace CP blocks - PMT is null");
