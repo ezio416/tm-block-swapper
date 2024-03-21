@@ -7,6 +7,7 @@ Block@[] mapBlocksCp;
 Block@[] mapBlocksCpRing;
 Block@[] mapBlocksFin;
 Block@[] mapBlocksFinRingGate;
+Block@[] mapBlocksMultilap;
 
 void ClearMapBlocks() {
     mapBlocks            = {};
@@ -14,6 +15,7 @@ void ClearMapBlocks() {
     mapBlocksCpRing      = {};
     mapBlocksFin         = {};
     mapBlocksFinRingGate = {};
+    mapBlocksMultilap    = {};
 }
 
 void LoadMapBlocks() {
@@ -66,6 +68,8 @@ void LoadMapBlocks() {
                     mapBlocksFin.InsertLast(block);
                 else if (name == "GateFinish" || name == "GateExpandableFinish")
                     mapBlocksFinRingGate.InsertLast(block);
+                else if (multilapLut.Exists(name))
+                    mapBlocksMultilap.InsertLast(block);
             }
         }
     }

@@ -3,6 +3,7 @@
 
 dictionary@ cpLut         = dictionary();
 dictionary@ finLut        = dictionary();
+dictionary@ multilapLut   = dictionary();
 bool        replacing     = false;
 bool        stopReplacing = false;
 
