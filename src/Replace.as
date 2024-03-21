@@ -11,8 +11,9 @@ void InitLUT() {
     if (
         LUT.GetType() != Json::Type::Object
         || !LUT.HasKey("checkpoint")
-        || !LUT.HasKey("finish")
         || !LUT.HasKey("multilap")
+        || !LUT.HasKey("start")
+        || !LUT.HasKey("finish")
     ) {
         error("LUT.json is invalid or missing");
         @LUT = null;
