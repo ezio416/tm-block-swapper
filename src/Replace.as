@@ -88,7 +88,9 @@ bool ReplaceBlock(Block@ block, CGameCtnEditorFree@ Editor, CSmEditorPluginMapTy
 
     const string name = block.name;
 
-    CGameCtnBlockInfo@ replacement = PMT.GetBlockModelFromName(string(lut[name]));
+    CGameCtnBlockInfo@ replacement = PMT.GetBlockModelFromName(string(lut[name]["replace"]));
+    const int rotate = lut[name]["rotate"];
+
     if (replacement is null) {
         warn("replacement not found for " + name);
         return false;
@@ -127,7 +129,8 @@ bool ReplaceBlock(Block@ block, CGameCtnEditorFree@ Editor, CSmEditorPluginMapTy
 
     PMT.NextMapElemColor = CGameEditorPluginMap::EMapElemColor(block.color);
 
-    const CGameEditorPluginMap::ECardinalDirections dir = CGameEditorPluginMap::ECardinalDirections(block.direction);
+    const CGameEditorPluginMap::ECardinalDirections dirOld = CGameEditorPluginMap::ECardinalDirections(block.direction);
+    const CGameEditorPluginMap::ECardinalDirections dirNew = CGameEditorPluginMap::ECardinalDirections((int(block.direction) + rotate) % 4);
 
     if (block.block is null || block.block.BlockModel is null) {
         warn("can't replace block - something is null");
@@ -135,22 +138,22 @@ bool ReplaceBlock(Block@ block, CGameCtnEditorFree@ Editor, CSmEditorPluginMapTy
     }
 
     if (block.ghost) {
-        if (!PMT.RemoveGhostBlock(block.block.BlockModel, block.coord, dir)) {
+        if (!PMT.RemoveGhostBlock(block.block.BlockModel, block.coord, dirOld)) {
             warn("failed to remove ghost block at " + tostring(block.coord));
             return false;
         }
 
-        if (!PMT.PlaceGhostBlock(replacement, block.coord, dir)) {
+        if (!PMT.PlaceGhostBlock(replacement, block.coord, dirNew)) {
             warn("failed to place replacement ghost block at " + tostring(block.coord));
             return false;
         }
     } else {
-        if (!PMT.RemoveBlockSafe(block.block.BlockModel, block.coord, dir)) {
+        if (!PMT.RemoveBlockSafe(block.block.BlockModel, block.coord, dirOld)) {
             warn("failed to remove block at " + tostring(block.coord));
             return false;
         }
 
-        if (!PMT.PlaceBlock(replacement, block.coord, dir)) {
+        if (!PMT.PlaceBlock(replacement, block.coord, dirNew)) {
             warn("failed to place replacement block at " + tostring(block.coord));
             return false;
         }
@@ -161,7 +164,7 @@ bool ReplaceBlock(Block@ block, CGameCtnEditorFree@ Editor, CSmEditorPluginMapTy
             if (pillarReplacement !is null) {
                 const int3 pillarCoord = block.coord - int3(0, 1, 0);
 
-                if (!PMT.PlaceBlock(pillarReplacement, pillarCoord, dir)) {  // this usually succeeds but still returns false?
+                if (!PMT.PlaceBlock(pillarReplacement, pillarCoord, dirNew)) {  // this usually succeeds but still returns false?
                     // warn("failed to place top pillar replacement block at " + tostring(pillarCoord));
                 }
             } else
@@ -176,7 +179,7 @@ bool ReplaceBlock(Block@ block, CGameCtnEditorFree@ Editor, CSmEditorPluginMapTy
 
                     const int3 pillarCoord = int3(block.coord.x, j, block.coord.z);
 
-                    if (!PMT.PlaceBlock(pillarReplacement, pillarCoord, dir))
+                    if (!PMT.PlaceBlock(pillarReplacement, pillarCoord, dirNew))
                         warn("failed to place pillar replacement block at " + tostring(pillarCoord));
                 }
             } else

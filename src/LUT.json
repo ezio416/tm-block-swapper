@@ -1,155 +1,574 @@
 {
     "checkpoint": {
-        "RoadTechCheckpoint"                     : "RoadTechStraight"                ,
-        "RoadTechCheckpointSlopeUp"              : "RoadTechSlopeStraight"           ,
-        "RoadTechCheckpointTiltRight"            : "RoadTechTiltStraight"            ,
-        "RoadTechDiagLeftCheckpoint"             : "RoadTechDiagLeftStraightX2"      ,
-        "RoadTechDiagRightCheckpoint"            : "RoadTechDiagRightStraightX2"     ,
-        "RoadDirtCheckpoint"                     : "RoadDirtStraight"                ,
-        "RoadDirtCheckpointSlopeUp"              : "RoadDirtSlopeStraight"           ,
-        "RoadDirtCheckpointTiltRight"            : "RoadDirtTiltStraight"            ,
-        "RoadDirtDiagLeftCheckpoint"             : "RoadDirtDiagLeftStraightX2"      ,
-        "RoadDirtDiagRightCheckpoint"            : "RoadDirtDiagRightStraightX2"     ,
-        "RoadBumpCheckpoint"                     : "RoadBumpStraight"                ,
-        "RoadBumpCheckpointSlopeUp"              : "RoadBumpSlopeStraight"           ,
-        "RoadBumpCheckpointTiltRight"            : "RoadBumpTiltStraight"            ,
-        "RoadBumpDiagLeftCheckpoint"             : "RoadBumpDiagLeftStraightX2"      ,
-        "RoadBumpDiagRightCheckpoint"            : "RoadBumpDiagRightStraightX2"     ,
-        "RoadIceCheckpoint"                      : "RoadIceStraight"                 ,
-        "RoadIceCheckpointSlopeUp"               : "RoadIceSlopeStraight"            ,
-        "RoadIceWithWallCheckpointLeft"          : "RoadIceWithWallStraight"         ,
-        "RoadIceWithWallDiagLeftCheckpointLeft"  : "RoadIceDiagLeftWithWallStraight" ,
-        "RoadIceWithWallDiagRightCheckpointRight": "RoadIceDiagRightWithWallStraight",
-        "RoadWaterCheckpoint"                    : "RoadWaterStraight"               ,
-        "PlatformWaterCheckpoint"                : "PlatformWaterBase"               ,
-        "PlatformTechCheckpoint"                 : "PlatformTechBase"                ,
-        "PlatformTechCheckpointSlope2Up"         : "PlatformTechSlope2Straight"      ,
-        "PlatformDirtCheckpoint"                 : "PlatformDirtBase"                ,
-        "PlatformDirtCheckpointSlope2Up"         : "PlatformDirtSlope2Straight"      ,
-        "PlatformIceCheckpoint"                  : "PlatformIceBase"                 ,
-        "PlatformIceCheckpointSlope2Up"          : "PlatformIceSlope2Straight"       ,
-        "PlatformGrassCheckpoint"                : "PlatformGrassBase"               ,
-        "PlatformGrassCheckpointSlope2Up"        : "PlatformGrassSlope2Straight"     ,
-        "PlatformPlasticCheckpoint"              : "PlatformPlasticBase"             ,
-        "PlatformPlasticCheckpointSlope2Up"      : "PlatformPlasticSlope2Straight"   ,
-        "OpenTechRoadCheckpoint"                 : "OpenTechRoadStraight"            ,
-        "OpenTechRoadCheckpointSlope2Up"         : "OpenTechRoadSlope2Straight"      ,
-        "OpenDirtRoadCheckpoint"                 : "OpenDirtRoadStraight"            ,
-        "OpenDirtRoadCheckpointSlope2Up"         : "OpenDirtRoadSlope2Straight"      ,
-        "OpenIceRoadCheckpoint"                  : "OpenIceRoadStraight"             ,
-        "OpenIceRoadCheckpointSlope2Up"          : "OpenIceRoadSlope2Straight"       ,
-        "OpenGrassRoadCheckpoint"                : "OpenGrassRoadStraight"           ,
-        "OpenGrassRoadCheckpointSlope2Up"        : "OpenGrassRoadSlope2Straight"     ,
-        "rotate": {
-            "RoadTechCheckpointSlopeDown"           : "RoadTechSlopeStraight"           ,
-            "RoadTechCheckpointTiltLeft"            : "RoadTechTiltStraight"            ,
-            "RoadDirtCheckpointSlopeDown"           : "RoadDirtSlopeStraight"           ,
-            "RoadDirtCheckpointTiltLeft"            : "RoadDirtTiltStraight"            ,
-            "RoadBumpCheckpointSlopeDown"           : "RoadBumpSlopeStraight"           ,
-            "RoadBumpCheckpointTiltLeft"            : "RoadBumpTiltStraight"            ,
-            "RoadIceCheckpointSlopeDown"            : "RoadIceSlopeStraight"            ,
-            "RoadIceWithWallCheckpointRight"        : "RoadIceWithWallStraight"         ,
-            "RoadIceWithWallDiagRightCheckpointLeft": "RoadIceDiagRightWithWallStraight",
-            "RoadIceWithWallDiagLeftCheckpointRight": "RoadIceDiagLeftWithWallStraight" ,
-            "PlatformTechCheckpointSlope2Down"      : "PlatformTechSlope2Straight"      ,
-            "PlatformTechCheckpointSlope2Right"     : "PlatformTechSlope2Straight"      ,
-            "PlatformTechCheckpointSlope2Left"      : "PlatformTechSlope2Straight"      ,
-            "PlatformTechWallCheckpointUp"          : "PlatformTechWallStraight4"       ,
-            "PlatformTechWallCheckpointDown"        : "PlatformTechWallStraight4"       ,
-            "PlatformTechWallCheckpointLeft"        : "PlatformTechWallStraight4"       ,
-            "PlatformTechWallCheckpointRight"       : "PlatformTechWallStraight4"       ,
-            "PlatformDirtCheckpointSlope2Down"      : "PlatformDirtSlope2Straight"      ,
-            "PlatformDirtCheckpointSlope2Right"     : "PlatformDirtSlope2Straight"      ,
-            "PlatformDirtCheckpointSlope2Left"      : "PlatformDirtSlope2Straight"      ,
-            "PlatformDirtWallCheckpointUp"          : "PlatformDirtWallStraight4"       ,
-            "PlatformDirtWallCheckpointDown"        : "PlatformDirtWallStraight4"       ,
-            "PlatformDirtWallCheckpointLeft"        : "PlatformDirtWallStraight4"       ,
-            "PlatformDirtWallCheckpointRight"       : "PlatformDirtWallStraight4"       ,
-            "PlatformIceCheckpointSlope2Down"       : "PlatformIceSlope2Straight"       ,
-            "PlatformIceCheckpointSlope2Right"      : "PlatformIceSlope2Straight"       ,
-            "PlatformIceCheckpointSlope2Left"       : "PlatformIceSlope2Straight"       ,
-            "PlatformIceWallCheckpointUp"           : "PlatformIceWallStraight4"        ,
-            "PlatformIceWallCheckpointDown"         : "PlatformIceWallStraight4"        ,
-            "PlatformIceWallCheckpointLeft"         : "PlatformIceWallStraight4"        ,
-            "PlatformIceWallCheckpointRight"        : "PlatformIceWallStraight4"        ,
-            "PlatformGrassCheckpointSlope2Down"     : "PlatformGrassSlope2Straight"     ,
-            "PlatformGrassCheckpointSlope2Right"    : "PlatformGrassSlope2Straight"     ,
-            "PlatformGrassCheckpointSlope2Left"     : "PlatformGrassSlope2Straight"     ,
-            "PlatformGrassWallCheckpointUp"         : "PlatformGrassWallStraight4"      ,
-            "PlatformGrassWallCheckpointDown"       : "PlatformGrassWallStraight4"      ,
-            "PlatformGrassWallCheckpointLeft"       : "PlatformGrassWallStraight4"      ,
-            "PlatformGrassWallCheckpointRight"      : "PlatformGrassWallStraight4"      ,
-            "PlatformPlasticCheckpointSlope2Down"   : "PlatformPlasticSlope2Straight"   ,
-            "PlatformPlasticCheckpointSlope2Right"  : "PlatformPlasticSlope2Straight"   ,
-            "PlatformPlasticCheckpointSlope2Left"   : "PlatformPlasticSlope2Straight"   ,
-            "PlatformPlasticWallCheckpointUp"       : "PlatformPlasticWallStraight4"    ,
-            "PlatformPlasticWallCheckpointDown"     : "PlatformPlasticWallStraight4"    ,
-            "PlatformPlasticWallCheckpointLeft"     : "PlatformPlasticWallStraight4"    ,
-            "PlatformPlasticWallCheckpointRight"    : "PlatformPlasticWallStraight4"    ,
-            "OpenTechRoadCheckpointSlope2Down"      : "OpenTechRoadSlope2Straight"      ,
-            "OpenTechRoadCheckpointSlope2Right"     : "OpenTechRoadStraightTilt2"       ,
-            "OpenTechRoadCheckpointSlope2Left"      : "OpenTechRoadStraightTilt2"       ,
-            "OpenDirtRoadCheckpointSlope2Down"      : "OpenDirtRoadSlope2Straight"      ,
-            "OpenDirtRoadCheckpointSlope2Right"     : "OpenDirtRoadStraightTilt2"       ,
-            "OpenDirtRoadCheckpointSlope2Left"      : "OpenDirtRoadStraightTilt2"       ,
-            "OpenIceRoadCheckpointSlope2Down"       : "OpenIceRoadSlope2Straight"       ,
-            "OpenIceRoadCheckpointSlope2Right"      : "OpenIceRoadStraightTilt2"        ,
-            "OpenIceRoadCheckpointSlope2Left"       : "OpenIceRoadStraightTilt2"        ,
-            "OpenGrassRoadCheckpointSlope2Down"     : "OpenGrassRoadSlope2Straight"     ,
-            "OpenGrassRoadCheckpointSlope2Right"    : "OpenGrassRoadStraightTilt2"      ,
-            "OpenGrassRoadCheckpointSlope2Left"     : "OpenGrassRoadStraightTilt2"
+        "OpenDirtRoadCheckpoint": {
+            "replace": "OpenDirtRoadStraight",
+            "rotate": 0
+        },
+        "OpenDirtRoadCheckpointSlope2Down": {
+            "replace": "OpenDirtRoadSlope2Straight",
+            "rotate": 2
+        },
+        "OpenDirtRoadCheckpointSlope2Left": {
+            "replace": "OpenDirtRoadStraightTilt2",
+            "rotate": 3
+        },
+        "OpenDirtRoadCheckpointSlope2Right": {
+            "replace": "OpenDirtRoadStraightTilt2",
+            "rotate": 1
+        },
+        "OpenDirtRoadCheckpointSlope2Up": {
+            "replace": "OpenDirtRoadSlope2Straight",
+            "rotate": 0
+        },
+        "OpenGrassRoadCheckpoint": {
+            "replace": "OpenGrassRoadStraight",
+            "rotate": 0
+        },
+        "OpenGrassRoadCheckpointSlope2Down": {
+            "replace": "OpenGrassRoadSlope2Straight",
+            "rotate": 2
+        },
+        "OpenGrassRoadCheckpointSlope2Left": {
+            "replace": "OpenGrassRoadStraightTilt2",
+            "rotate": 3
+        },
+        "OpenGrassRoadCheckpointSlope2Right": {
+            "replace": "OpenGrassRoadStraightTilt2",
+            "rotate": 1
+        },
+        "OpenGrassRoadCheckpointSlope2Up": {
+            "replace": "OpenGrassRoadSlope2Straight",
+            "rotate": 0
+        },
+        "OpenIceRoadCheckpoint": {
+            "replace": "OpenIceRoadStraight",
+            "rotate": 0
+        },
+        "OpenIceRoadCheckpointSlope2Down": {
+            "replace": "OpenIceRoadSlope2Straight",
+            "rotate": 2
+        },
+        "OpenIceRoadCheckpointSlope2Left": {
+            "replace": "OpenIceRoadStraightTilt2",
+            "rotate": 3
+        },
+        "OpenIceRoadCheckpointSlope2Right": {
+            "replace": "OpenIceRoadStraightTilt2",
+            "rotate": 1
+        },
+        "OpenIceRoadCheckpointSlope2Up": {
+            "replace": "OpenIceRoadSlope2Straight",
+            "rotate": 0
+        },
+        "OpenTechRoadCheckpoint": {
+            "replace": "OpenTechRoadStraight",
+            "rotate": 0
+        },
+        "OpenTechRoadCheckpointSlope2Down": {
+            "replace": "OpenTechRoadSlope2Straight",
+            "rotate": 2
+        },
+        "OpenTechRoadCheckpointSlope2Left": {
+            "replace": "OpenTechRoadStraightTilt2",
+            "rotate": 3
+        },
+        "OpenTechRoadCheckpointSlope2Right": {
+            "replace": "OpenTechRoadStraightTilt2",
+            "rotate": 1
+        },
+        "OpenTechRoadCheckpointSlope2Up": {
+            "replace": "OpenTechRoadSlope2Straight",
+            "rotate": 0
+        },
+        "PlatformDirtCheckpoint": {
+            "replace": "PlatformDirtBase",
+            "rotate": 0
+        },
+        "PlatformDirtCheckpointSlope2Down": {
+            "replace": "PlatformDirtSlope2Straight",
+            "rotate": 2
+        },
+        "PlatformDirtCheckpointSlope2Left": {
+            "replace": "PlatformDirtSlope2Straight",
+            "rotate": 3
+        },
+        "PlatformDirtCheckpointSlope2Right": {
+            "replace": "PlatformDirtSlope2Straight",
+            "rotate": 1
+        },
+        "PlatformDirtCheckpointSlope2Up": {
+            "replace": "PlatformDirtSlope2Straight",
+            "rotate": 0
+        },
+        "PlatformDirtWallCheckpointDown": {
+            "replace": "PlatformDirtWallStraight4",
+            "rotate": 3
+        },
+        "PlatformDirtWallCheckpointLeft": {
+            "replace": "PlatformDirtWallStraight4",
+            "rotate": 3
+        },
+        "PlatformDirtWallCheckpointRight": {
+            "replace": "PlatformDirtWallStraight4",
+            "rotate": 3
+        },
+        "PlatformDirtWallCheckpointUp": {
+            "replace": "PlatformDirtWallStraight4",
+            "rotate": 3
+        },
+        "PlatformGrassCheckpoint": {
+            "replace": "PlatformGrassBase",
+            "rotate": 0
+        },
+        "PlatformGrassCheckpointSlope2Down": {
+            "replace": "PlatformGrassSlope2Straight",
+            "rotate": 2
+        },
+        "PlatformGrassCheckpointSlope2Left": {
+            "replace": "PlatformGrassSlope2Straight",
+            "rotate": 3
+        },
+        "PlatformGrassCheckpointSlope2Right": {
+            "replace": "PlatformGrassSlope2Straight",
+            "rotate": 1
+        },
+        "PlatformGrassCheckpointSlope2Up": {
+            "replace": "PlatformGrassSlope2Straight",
+            "rotate": 0
+        },
+        "PlatformGrassWallCheckpointDown": {
+            "replace": "PlatformGrassWallStraight4",
+            "rotate": 3
+        },
+        "PlatformGrassWallCheckpointLeft": {
+            "replace": "PlatformGrassWallStraight4",
+            "rotate": 3
+        },
+        "PlatformGrassWallCheckpointRight": {
+            "replace": "PlatformGrassWallStraight4",
+            "rotate": 3
+        },
+        "PlatformGrassWallCheckpointUp": {
+            "replace": "PlatformGrassWallStraight4",
+            "rotate": 3
+        },
+        "PlatformIceCheckpoint": {
+            "replace": "PlatformIceBase",
+            "rotate": 0
+        },
+        "PlatformIceCheckpointSlope2Down": {
+            "replace": "PlatformIceSlope2Straight",
+            "rotate": 2
+        },
+        "PlatformIceCheckpointSlope2Left": {
+            "replace": "PlatformIceSlope2Straight",
+            "rotate": 3
+        },
+        "PlatformIceCheckpointSlope2Right": {
+            "replace": "PlatformIceSlope2Straight",
+            "rotate": 1
+        },
+        "PlatformIceCheckpointSlope2Up": {
+            "replace": "PlatformIceSlope2Straight",
+            "rotate": 0
+        },
+        "PlatformIceWallCheckpointDown": {
+            "replace": "PlatformIceWallStraight4",
+            "rotate": 3
+        },
+        "PlatformIceWallCheckpointLeft": {
+            "replace": "PlatformIceWallStraight4",
+            "rotate": 3
+        },
+        "PlatformIceWallCheckpointRight": {
+            "replace": "PlatformIceWallStraight4",
+            "rotate": 3
+        },
+        "PlatformIceWallCheckpointUp": {
+            "replace": "PlatformIceWallStraight4",
+            "rotate": 3
+        },
+        "PlatformPlasticCheckpoint": {
+            "replace": "PlatformPlasticBase",
+            "rotate": 0
+        },
+        "PlatformPlasticCheckpointSlope2Down": {
+            "replace": "PlatformPlasticSlope2Straight",
+            "rotate": 2
+        },
+        "PlatformPlasticCheckpointSlope2Left": {
+            "replace": "PlatformPlasticSlope2Straight",
+            "rotate": 3
+        },
+        "PlatformPlasticCheckpointSlope2Right": {
+            "replace": "PlatformPlasticSlope2Straight",
+            "rotate": 1
+        },
+        "PlatformPlasticCheckpointSlope2Up": {
+            "replace": "PlatformPlasticSlope2Straight",
+            "rotate": 0
+        },
+        "PlatformPlasticWallCheckpointDown": {
+            "replace": "PlatformPlasticWallStraight4",
+            "rotate": 3
+        },
+        "PlatformPlasticWallCheckpointLeft": {
+            "replace": "PlatformPlasticWallStraight4",
+            "rotate": 3
+        },
+        "PlatformPlasticWallCheckpointRight": {
+            "replace": "PlatformPlasticWallStraight4",
+            "rotate": 3
+        },
+        "PlatformPlasticWallCheckpointUp": {
+            "replace": "PlatformPlasticWallStraight4",
+            "rotate": 3
+        },
+        "PlatformTechCheckpoint": {
+            "replace": "PlatformTechBase",
+            "rotate": 0
+        },
+        "PlatformTechCheckpointSlope2Down": {
+            "replace": "PlatformTechSlope2Straight",
+            "rotate": 2
+        },
+        "PlatformTechCheckpointSlope2Left": {
+            "replace": "PlatformTechSlope2Straight",
+            "rotate": 3
+        },
+        "PlatformTechCheckpointSlope2Right": {
+            "replace": "PlatformTechSlope2Straight",
+            "rotate": 1
+        },
+        "PlatformTechCheckpointSlope2Up": {
+            "replace": "PlatformTechSlope2Straight",
+            "rotate": 0
+        },
+        "PlatformTechWallCheckpointDown": {
+            "replace": "PlatformTechWallStraight4",
+            "rotate": 3
+        },
+        "PlatformTechWallCheckpointLeft": {
+            "replace": "PlatformTechWallStraight4",
+            "rotate": 3
+        },
+        "PlatformTechWallCheckpointRight": {
+            "replace": "PlatformTechWallStraight4",
+            "rotate": 3
+        },
+        "PlatformTechWallCheckpointUp": {
+            "replace": "PlatformTechWallStraight4",
+            "rotate": 3
+        },
+        "PlatformWaterCheckpoint": {
+            "replace": "PlatformWaterBase",
+            "rotate": 0
+        },
+        "RoadBumpCheckpoint": {
+            "replace": "RoadBumpStraight",
+            "rotate": 0
+        },
+        "RoadBumpCheckpointSlopeDown": {
+            "replace": "RoadBumpSlopeStraight",
+            "rotate": 2
+        },
+        "RoadBumpCheckpointSlopeUp": {
+            "replace": "RoadBumpSlopeStraight",
+            "rotate": 0
+        },
+        "RoadBumpCheckpointTiltLeft": {
+            "replace": "RoadBumpTiltStraight",
+            "rotate": 2
+        },
+        "RoadBumpCheckpointTiltRight": {
+            "replace": "RoadBumpTiltStraight",
+            "rotate": 0
+        },
+        "RoadBumpDiagLeftCheckpoint": {
+            "replace": "RoadBumpDiagLeftStraightX2",
+            "rotate": 0
+        },
+        "RoadBumpDiagRightCheckpoint": {
+            "replace": "RoadBumpDiagRightStraightX2",
+            "rotate": 0
+        },
+        "RoadDirtCheckpoint": {
+            "replace": "RoadDirtStraight",
+            "rotate": 0
+        },
+        "RoadDirtCheckpointSlopeDown": {
+            "replace": "RoadDirtSlopeStraight",
+            "rotate": 2
+        },
+        "RoadDirtCheckpointSlopeUp": {
+            "replace": "RoadDirtSlopeStraight",
+            "rotate": 0
+        },
+        "RoadDirtCheckpointTiltLeft": {
+            "replace": "RoadDirtTiltStraight",
+            "rotate": 2
+        },
+        "RoadDirtCheckpointTiltRight": {
+            "replace": "RoadDirtTiltStraight",
+            "rotate": 0
+        },
+        "RoadDirtDiagLeftCheckpoint": {
+            "replace": "RoadDirtDiagLeftStraightX2",
+            "rotate": 0
+        },
+        "RoadDirtDiagRightCheckpoint": {
+            "replace": "RoadDirtDiagRightStraightX2",
+            "rotate": 0
+        },
+        "RoadIceCheckpoint": {
+            "replace": "RoadIceStraight",
+            "rotate": 0
+        },
+        "RoadIceCheckpointSlopeDown": {
+            "replace": "RoadIceSlopeStraight",
+            "rotate": 2
+        },
+        "RoadIceCheckpointSlopeUp": {
+            "replace": "RoadIceSlopeStraight",
+            "rotate": 0
+        },
+        "RoadIceWithWallCheckpointLeft": {
+            "replace": "RoadIceWithWallStraight",
+            "rotate": 0
+        },
+        "RoadIceWithWallCheckpointRight": {
+            "replace": "RoadIceWithWallStraight",
+            "rotate": 2
+        },
+        "RoadIceWithWallDiagLeftCheckpointLeft": {
+            "replace": "RoadIceDiagLeftWithWallStraight",
+            "rotate": 0
+        },
+        "RoadIceWithWallDiagLeftCheckpointRight": {
+            "replace": "RoadIceDiagLeftWithWallStraight",
+            "rotate": 2
+        },
+        "RoadIceWithWallDiagRightCheckpointLeft": {
+            "replace": "RoadIceDiagRightWithWallStraight",
+            "rotate": 2
+        },
+        "RoadIceWithWallDiagRightCheckpointRight": {
+            "replace": "RoadIceDiagRightWithWallStraight",
+            "rotate": 0
+        },
+        "RoadTechCheckpoint": {
+            "replace": "RoadTechStraight",
+            "rotate": 0
+        },
+        "RoadTechCheckpointSlopeDown": {
+            "replace": "RoadTechSlopeStraight",
+            "rotate": 2
+        },
+        "RoadTechCheckpointSlopeUp": {
+            "replace": "RoadTechSlopeStraight",
+            "rotate": 0
+        },
+        "RoadTechCheckpointTiltLeft": {
+            "replace": "RoadTechTiltStraight",
+            "rotate": 2
+        },
+        "RoadTechCheckpointTiltRight": {
+            "replace": "RoadTechTiltStraight",
+            "rotate": 0
+        },
+        "RoadTechDiagLeftCheckpoint": {
+            "replace": "RoadTechDiagLeftStraightX2",
+            "rotate": 0
+        },
+        "RoadTechDiagRightCheckpoint": {
+            "replace": "RoadTechDiagRightStraightX2",
+            "rotate": 0
+        },
+        "RoadWaterCheckpoint": {
+            "replace": "RoadWaterStraight",
+            "rotate": 0
+        }
+    },
+    "finish": {
+        "PlatformDirtFinish": {
+            "replace": "PlatformDirtBase",
+            "rotate": 0
+        },
+        "PlatformGrassFinish": {
+            "replace": "PlatformGrassBase",
+            "rotate": 0
+        },
+        "PlatformIceFinish": {
+            "replace": "PlatformIceBase",
+            "rotate": 0
+        },
+        "PlatformPlasticFinish": {
+            "replace": "PlatformPlasticBase",
+            "rotate": 0
+        },
+        "PlatformTechFinish": {
+            "replace": "PlatformTechBase",
+            "rotate": 0
+        },
+        "PlatformWaterFinish": {
+            "replace": "PlatformWaterBase",
+            "rotate": 0
+        },
+        "RoadBumpFinish": {
+            "replace": "RoadBumpStraight",
+            "rotate": 0
+        },
+        "RoadDirtFinish": {
+            "replace": "RoadDirtStraight",
+            "rotate": 0
+        },
+        "RoadIceFinish": {
+            "replace": "RoadIceStraight",
+            "rotate": 0
+        },
+        "RoadTechFinish": {
+            "replace": "RoadTechStraight",
+            "rotate": 0
+        },
+        "RoadWaterFinish": {
+            "replace": "RoadWaterStraight",
+            "rotate": 0
         }
     },
     "multilap": {
-        "RoadTechMultilap"                     : "RoadTechStraight"                ,
-        "RoadTechDiagLeftMultilap"             : "RoadTechDiagLeftStraightX2"      ,
-        "RoadTechDiagLRightMultilap"           : "RoadTechDiagRightStraightX2"     ,
-        "RoadDirtMultilap"                     : "RoadDirtStraight"                ,
-        "RoadDirtDiagLeftMultilap"             : "RoadDirtDiagLeftStraightX2"      ,
-        "RoadDirtDiagLRightMultilap"           : "RoadDirtDiagRightStraightX2"     ,
-        "RoadBumpMultilap"                     : "RoadBumpStraight"                ,
-        "RoadBumpDiagLeftMultilap"             : "RoadBumpDiagLeftStraightX2"      ,
-        "RoadBumpDiagLRightMultilap"           : "RoadBumpDiagRightStraightX2"     ,
-        "RoadIceMultilap"                      : "RoadIceStraight"                 ,
-        "RoadIceWithWallMultilapLeft"          : "RoadIceWithWallStraight"         ,
-        "RoadIceWithWallDiagLeftMultilapLeft"  : "RoadIceDiagLeftWithWallStraight" ,
-        "RoadIceWithWallDiagRightMultilapRight": "RoadIceDiagRightWithWallStraight",
-        "RoadWaterMultilap"                    : "RoadWaterStraight"               ,
-        "PlatformTechMultilap"                 : "PlatformTechBase"                ,
-        "PlatformDirtMultilap"                 : "PlatformDirtBase"                ,
-        "PlatformIceMultilap"                  : "PlatformIceBase"                 ,
-        "PlatformGrassMultilap"                : "PlatformGrassBase"               ,
-        "PlatformPlasticMultilap"              : "PlatformPlasticBase"             ,
-        "rotate": {
-            "RoadIceWithWallMultilapRight"        : "RoadIceWithWallStraight"         ,
-            "RoadIceWithWallDiagRightMultilapLeft": "RoadIceDiagRightWithWallStraight",
-            "RoadIceWithWallDiagLeftMultilapRight": "RoadIceDiagLeftWithWallStraight"
+        "PlatformDirtMultilap": {
+            "replace": "PlatformDirtBase",
+            "rotate": 0
+        },
+        "PlatformGrassMultilap": {
+            "replace": "PlatformGrassBase",
+            "rotate": 0
+        },
+        "PlatformIceMultilap": {
+            "replace": "PlatformIceBase",
+            "rotate": 0
+        },
+        "PlatformPlasticMultilap": {
+            "replace": "PlatformPlasticBase",
+            "rotate": 0
+        },
+        "PlatformTechMultilap": {
+            "replace": "PlatformTechBase",
+            "rotate": 0
+        },
+        "RoadBumpDiagLRightMultilap": {
+            "replace": "RoadBumpDiagRightStraightX2",
+            "rotate": 0
+        },
+        "RoadBumpDiagLeftMultilap": {
+            "replace": "RoadBumpDiagLeftStraightX2",
+            "rotate": 0
+        },
+        "RoadBumpMultilap": {
+            "replace": "RoadBumpStraight",
+            "rotate": 0
+        },
+        "RoadDirtDiagLRightMultilap": {
+            "replace": "RoadDirtDiagRightStraightX2",
+            "rotate": 0
+        },
+        "RoadDirtDiagLeftMultilap": {
+            "replace": "RoadDirtDiagLeftStraightX2",
+            "rotate": 0
+        },
+        "RoadDirtMultilap": {
+            "replace": "RoadDirtStraight",
+            "rotate": 0
+        },
+        "RoadIceMultilap": {
+            "replace": "RoadIceStraight",
+            "rotate": 0
+        },
+        "RoadIceWithWallDiagLeftMultilapLeft": {
+            "replace": "RoadIceDiagLeftWithWallStraight",
+            "rotate": 0
+        },
+        "RoadIceWithWallDiagLeftMultilapRight": {
+            "replace": "RoadIceDiagLeftWithWallStraight",
+            "rotate": 2
+        },
+        "RoadIceWithWallDiagRightMultilapLeft": {
+            "replace": "RoadIceDiagRightWithWallStraight",
+            "rotate": 2
+        },
+        "RoadIceWithWallDiagRightMultilapRight": {
+            "replace": "RoadIceDiagRightWithWallStraight",
+            "rotate": 0
+        },
+        "RoadIceWithWallMultilapLeft": {
+            "replace": "RoadIceWithWallStraight",
+            "rotate": 0
+        },
+        "RoadIceWithWallMultilapRight": {
+            "replace": "RoadIceWithWallStraight",
+            "rotate": 2
+        },
+        "RoadTechDiagLRightMultilap": {
+            "replace": "RoadTechDiagRightStraightX2",
+            "rotate": 0
+        },
+        "RoadTechDiagLeftMultilap": {
+            "replace": "RoadTechDiagLeftStraightX2",
+            "rotate": 0
+        },
+        "RoadTechMultilap": {
+            "replace": "RoadTechStraight",
+            "rotate": 0
+        },
+        "RoadWaterMultilap": {
+            "replace": "RoadWaterStraight",
+            "rotate": 0
         }
     },
     "start": {
-        "RoadTechStart"       : "RoadTechStraight"     ,
-        "RoadDirtStart"       : "RoadDirtStraight"     ,
-        "RoadBumpStart"       : "RoadBumpStraight"     ,
-        "RoadIceStart"        : "RoadIceStraight"      ,
-        "RoadWaterStart"      : "RoadWaterStraight"    ,
-        "PlatformWaterStart"  : "PlatformWaterStraight",
-        "PlatformTechStart"   : "PlatformTechStraight" ,
-        "PlatformDirtStart"   : "PlatformDirtStraight" ,
-        "PlatformIceStart"    : "PlatformIceStraight"  ,
-        "PlatformGrassStart"  : "PlatformGrassStraight",
-        "PlatformPlasticStart": "PlatformPlasticStraight"
-    },
-    "finish": {
-        "RoadTechFinish"       : "RoadTechStraight" ,
-        "RoadDirtFinish"       : "RoadDirtStraight" ,
-        "RoadBumpFinish"       : "RoadBumpStraight" ,
-        "RoadIceFinish"        : "RoadIceStraight"  ,
-        "RoadWaterFinish"      : "RoadWaterStraight",
-        "PlatformWaterFinish"  : "PlatformWaterBase",
-        "PlatformTechFinish"   : "PlatformTechBase" ,
-        "PlatformDirtFinish"   : "PlatformDirtBase" ,
-        "PlatformIceFinish"    : "PlatformIceBase"  ,
-        "PlatformGrassFinish"  : "PlatformGrassBase",
-        "PlatformPlasticFinish": "PlatformPlasticBase"
+        "PlatformDirtStart": {
+            "replace": "PlatformDirtStraight",
+            "rotate": 0
+        },
+        "PlatformGrassStart": {
+            "replace": "PlatformGrassStraight",
+            "rotate": 0
+        },
+        "PlatformIceStart": {
+            "replace": "PlatformIceStraight",
+            "rotate": 0
+        },
+        "PlatformPlasticStart": {
+            "replace": "PlatformPlasticStraight",
+            "rotate": 0
+        },
+        "PlatformTechStart": {
+            "replace": "PlatformTechStraight",
+            "rotate": 0
+        },
+        "PlatformWaterStart": {
+            "replace": "PlatformWaterStraight",
+            "rotate": 0
+        },
+        "RoadBumpStart": {
+            "replace": "RoadBumpStraight",
+            "rotate": 0
+        },
+        "RoadDirtStart": {
+            "replace": "RoadDirtStraight",
+            "rotate": 0
+        },
+        "RoadIceStart": {
+            "replace": "RoadIceStraight",
+            "rotate": 0
+        },
+        "RoadTechStart": {
+            "replace": "RoadTechStraight",
+            "rotate": 0
+        },
+        "RoadWaterStart": {
+            "replace": "RoadWaterStraight",
+            "rotate": 0
+        }
     }
 }
