@@ -392,47 +392,47 @@
     "finish": {
         "PlatformDirtFinish": {
             "replace": "PlatformDirtBase",
-            "rotate": 0
+            "rotate": 2
         },
         "PlatformGrassFinish": {
             "replace": "PlatformGrassBase",
-            "rotate": 0
+            "rotate": 2
         },
         "PlatformIceFinish": {
             "replace": "PlatformIceBase",
-            "rotate": 0
+            "rotate": 2
         },
         "PlatformPlasticFinish": {
             "replace": "PlatformPlasticBase",
-            "rotate": 0
+            "rotate": 2
         },
         "PlatformTechFinish": {
             "replace": "PlatformTechBase",
-            "rotate": 0
+            "rotate": 2
         },
         "PlatformWaterFinish": {
             "replace": "PlatformWaterBase",
-            "rotate": 0
+            "rotate": 2
         },
         "RoadBumpFinish": {
             "replace": "RoadBumpStraight",
-            "rotate": 0
+            "rotate": 2
         },
         "RoadDirtFinish": {
             "replace": "RoadDirtStraight",
-            "rotate": 0
+            "rotate": 2
         },
         "RoadIceFinish": {
             "replace": "RoadIceStraight",
-            "rotate": 0
+            "rotate": 2
         },
         "RoadTechFinish": {
             "replace": "RoadTechStraight",
-            "rotate": 0
+            "rotate": 2
         },
         "RoadWaterFinish": {
             "replace": "RoadWaterStraight",
-            "rotate": 0
+            "rotate": 2
         }
     },
     "multilap": {
