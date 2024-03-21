@@ -78,7 +78,7 @@ void ReplaceBlocks(Block@[]@ blocks, const string &in type) {
         if (ReplaceBlock(block, Editor, PMT, LUT[type], airBlockModePre))
             total++;
 
-        if (airBlockModePre != AirBlockModeActive(Editor))
+        if (AirBlockModeActive(Editor) != airBlockModePre)
             Editor.ButtonAirBlockModeOnClick();
 
         PMT.NextMapElemColor = colorPre;
@@ -124,15 +124,30 @@ bool ReplaceBlock(Block@ block, CGameCtnEditorFree@ Editor, CSmEditorPluginMapTy
             const int3 coordsCheck = int3(block.coord.x, j, block.coord.z);
             @pillar = PMT.GetBlock(coordsCheck);
 
-            if (
-                pillar is null
-                || !pillar.DescId.GetName().EndsWith("Pillar")
-                || pillar.BlockDir != block.direction
-            )
+            if (pillar is null) {
+                // warn("null pillar at " + tostring(coordsCheck));  // don't need to warn here, just means pillar is not full
                 break;
+            }
+
+            const string pillarName = pillar.DescId.GetName();
+
+            if (!pillarName.EndsWith("Pillar")) {
+                if (pillarName != "Grass")  // special case for Platform____WallCheckpoint____
+                    warn("block at " + tostring(coordsCheck) + " (" + pillarName + ") is not a pillar");
+
+                break;
+            }
+
+            if (
+                int(pillar.BlockDir) % 2 != int(block.direction) % 2
+                && pillarName != "DecoWallBasePillar"  // special case for Platform____CheckpointSlope2Down blocks - these place pillars 90° to the block
+            ) {
+                warn("pillar facing wrong way: is " + tostring(pillar.BlockDir) + " instead of " + tostring(block.direction));
+                break;
+            }
 
             if (nonPillarName.Length == 0)
-                nonPillarName = pillar.DescId.GetName().Replace("Pillar", "");
+                nonPillarName = pillarName.Replace("Pillar", "");
 
             pillars++;
         }
@@ -140,7 +155,7 @@ bool ReplaceBlock(Block@ block, CGameCtnEditorFree@ Editor, CSmEditorPluginMapTy
 
     const bool fullPillar = pillars > 0 && pillars == block.coord.y - 9;
 
-    if ((!fullPillar && !airBlockModePre) || (fullPillar && airBlockModePre))
+    if (!airBlockModePre)
         Editor.ButtonAirBlockModeOnClick();
 
     PMT.NextMapElemColor = CGameEditorPluginMap::EMapElemColor(block.color);
@@ -155,22 +170,22 @@ bool ReplaceBlock(Block@ block, CGameCtnEditorFree@ Editor, CSmEditorPluginMapTy
 
     if (block.ghost) {
         if (!PMT.RemoveGhostBlock(block.block.BlockModel, block.coord, dirOld)) {
-            warn("failed to remove ghost block at " + tostring(block.coord));
+            warn("failed to remove ghost block facing " + tostring(dirOld) + " at " + tostring(block.coord));
             return false;
         }
 
         if (!PMT.PlaceGhostBlock(replacement, block.coord, dirNew)) {
-            warn("failed to place replacement ghost block at " + tostring(block.coord));
+            warn("failed to place replacement ghost block facing " + tostring(dirNew) + " at " + tostring(block.coord));
             return false;
         }
     } else {
         if (!PMT.RemoveBlockSafe(block.block.BlockModel, block.coord, dirOld)) {
-            warn("failed to remove block at " + tostring(block.coord));
+            warn("failed to remove block facing " + tostring(dirOld) + " at " + tostring(block.coord));
             return false;
         }
 
         if (!PMT.PlaceBlock(replacement, block.coord, dirNew)) {
-            warn("failed to place replacement block at " + tostring(block.coord));
+            warn("failed to place replacement block facing " + tostring(dirNew) + " at " + tostring(block.coord));
             return false;
         }
 
@@ -178,11 +193,13 @@ bool ReplaceBlock(Block@ block, CGameCtnEditorFree@ Editor, CSmEditorPluginMapTy
             CGameCtnBlockInfo@ pillarReplacement = PMT.GetBlockModelFromName(nonPillarName);
 
             if (pillarReplacement !is null) {
+                if (AirBlockModeActive(Editor))
+                    Editor.ButtonAirBlockModeOnClick();
+
                 const int3 pillarCoord = block.coord - int3(0, 1, 0);
 
-                if (!PMT.PlaceBlock(pillarReplacement, pillarCoord, dirNew)) {  // this usually succeeds but still returns false?
-                    // warn("failed to place top pillar replacement block at " + tostring(pillarCoord));
-                }
+                if (!PMT.PlaceBlock(pillarReplacement, pillarCoord, dirNew))
+                    warn("failed to place top pillar replacement block facing " + tostring(dirNew) + " at " + tostring(pillarCoord));
             } else
                 warn("top pillar replacement block not found: " + nonPillarName);
 
@@ -196,7 +213,7 @@ bool ReplaceBlock(Block@ block, CGameCtnEditorFree@ Editor, CSmEditorPluginMapTy
                     const int3 pillarCoord = int3(block.coord.x, j, block.coord.z);
 
                     if (!PMT.PlaceBlock(pillarReplacement, pillarCoord, dirNew))
-                        warn("failed to place pillar replacement block at " + tostring(pillarCoord));
+                        warn("failed to place pillar replacement block facing " + tostring(dirNew) + " at " + tostring(pillarCoord));
                 }
             } else
                 warn("pillar replacement block not found: " + nonPillarName);
