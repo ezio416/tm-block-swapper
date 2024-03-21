@@ -54,12 +54,12 @@ void RemoveCpBlocks() {
 
         if (block.ghost) {
             if (!PMT.RemoveGhostBlock(block.block.BlockModel, block.coord, CGameEditorPluginMap::ECardinalDirections(block.direction))) {
-                warn("failed to remove ghost block");
+                warn("failed to remove ghost block at " + tostring(block.coord));
                 continue;
             }
         } else {
             if (!PMT.RemoveBlockSafe(block.block.BlockModel, block.coord, CGameEditorPluginMap::ECardinalDirections(block.direction))) {
-                warn("failed to remove block");
+                warn("failed to remove block at " + tostring(block.coord));
                 continue;
             }
         }
