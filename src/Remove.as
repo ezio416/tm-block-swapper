@@ -1,30 +1,30 @@
 // c 2024-03-19
-// m 2024-03-20
+// m 2024-03-21
 
 bool removing     = false;
 bool stopRemoving = false;
 
-void RemoveCpBlocks() {
+void RemoveCheckpointBlocks() {
     if (removing)
         return;
 
     removing = true;
 
     const uint64 start = Time::Now;
-    trace("removing CP blocks");
+    trace("removing checkpoint blocks");
 
     CTrackMania@ App = cast<CTrackMania@>(GetApp());
 
     CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree@>(App.Editor);
     if (Editor is null) {
-        warn("can't remove CP blocks - Editor is null");
+        warn("can't remove checkpoint blocks - Editor is null");
         removing = false;
         return;
     }
 
     CSmEditorPluginMapType@ PMT = cast<CSmEditorPluginMapType@>(Editor.PluginMapType);
     if (PMT is null) {
-        warn("can't remove CP blocks - PMT is null");
+        warn("can't remove checkpoint blocks - PMT is null");
         removing = false;
         return;
     }
@@ -36,12 +36,12 @@ void RemoveCpBlocks() {
     for (uint i = 0; i < mapBlocksCpRing.Length; i++) {
         YieldIfNeeded();
 
-        trace("removing ring CP (" + (i + 1) + " / " + mapBlocksCpRing.Length + ")");
+        trace("removing ring checkpoint (" + (i + 1) + " / " + mapBlocksCpRing.Length + ")");
 
         Block@ block = mapBlocksCpRing[i];
 
         if (block.block is null || block.block.BlockModel is null) {
-            warn("can't remove ring CP - something is null");
+            warn("can't remove ring checkpoint - something is null");
             continue;
         }
 
@@ -61,7 +61,7 @@ void RemoveCpBlocks() {
     }
 
     const uint64 dif = Time::Now - start;
-    trace("removed " + total + " CP block" + (total == 1 ? "" : "s") + " after " + dif + "ms (" + Time::Format(dif) + ")");
+    trace("removed " + total + " checkpoint block" + (total == 1 ? "" : "s") + " after " + dif + "ms (" + Time::Format(dif) + ")");
 
     if (total > 0)
         PMT.AutoSave();  // usually doesn't save but at least fixes undo

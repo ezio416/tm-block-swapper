@@ -64,8 +64,8 @@ void Tab_Main() {
         return;
 
     UI::BeginDisabled(replacing);
-    if (UI::Button("Replace CP blocks"))
-        startnew(ReplaceCpBlocks);
+    if (UI::Button("Replace checkpoint blocks"))
+        startnew(ReplaceCheckpointBlocks);
     UI::EndDisabled();
 
     UI::BeginDisabled(stopReplacing || !replacing);
@@ -76,8 +76,8 @@ void Tab_Main() {
 
     UI::BeginDisabled(removing);
     UI::SameLine();
-    if (UI::Button("Remove CP blocks (ring)"))
-        startnew(RemoveCpBlocks);
+    if (UI::Button("Remove checkpoint blocks (ring)"))
+        startnew(RemoveCheckpointBlocks);
     UI::EndDisabled();
 
     UI::BeginDisabled(stopRemoving || !removing);
@@ -97,17 +97,17 @@ void Tab_Main() {
         stopReplacing = true;
     UI::EndDisabled();
 
-    UI::BeginDisabled(removing);
-    UI::SameLine();
-    if (UI::Button("Remove finish blocks (ring/expandable)"))
-        startnew(RemoveCpBlocks);
-    UI::EndDisabled();
+    // UI::BeginDisabled(removing);
+    // UI::SameLine();
+    // if (UI::Button("Remove finish blocks (ring/expandable)"))
+    //     startnew(RemoveFinishBlocks);
+    // UI::EndDisabled();
 
-    UI::BeginDisabled(stopRemoving || !removing);
-    UI::SameLine();
-    if (UI::Button("STOP REMOVING##fin"))
-        stopRemoving = true;
-    UI::EndDisabled();
+    // UI::BeginDisabled(stopRemoving || !removing);
+    // UI::SameLine();
+    // if (UI::Button("STOP REMOVING##fin"))
+    //     stopRemoving = true;
+    // UI::EndDisabled();
 
     UI::BeginDisabled(replacing);
     if (UI::Button("Replace multilap blocks"))

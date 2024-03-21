@@ -20,213 +20,43 @@ void InitLUT() {
     }
 }
 
-void ReplaceCpBlocks() {
-    if (replacing)
-        return;
-
-    replacing = true;
-
-    const uint64 start = Time::Now;
-    trace("replacing CP blocks");
-
-    CTrackMania@ App = cast<CTrackMania@>(GetApp());
-
-    CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree@>(App.Editor);
-    if (Editor is null) {
-        warn("can't replace CP blocks - Editor is null");
-        replacing = false;
-        return;
-    }
-
-    CSmEditorPluginMapType@ PMT = cast<CSmEditorPluginMapType@>(Editor.PluginMapType);
-    if (PMT is null) {
-        warn("can't replace CP blocks - PMT is null");
-        replacing = false;
-        return;
-    }
-
-    uint total = 0;
-
-    LoadMapBlocks();
-
-    for (uint i = 0; i < mapBlocksCp.Length; i++) {
-        YieldIfNeeded();
-
-        trace("replacing CP block (" + (i + 1) + " / " + mapBlocksCp.Length + ")");
-
-        Block@ block = mapBlocksCp[i];
-
-        const bool airBlockModePre = AirBlockModeActive(Editor);
-        const CGameEditorPluginMap::EMapElemColor colorPre = PMT.NextMapElemColor;
-
-        if (ReplaceBlock(block, Editor, PMT, LUT["checkpoint"], airBlockModePre))
-            total++;
-
-        if (airBlockModePre != AirBlockModeActive(Editor))
-            Editor.ButtonAirBlockModeOnClick();
-
-        PMT.NextMapElemColor = colorPre;
-
-        if (stopReplacing) {
-            stopReplacing = false;
-            break;
-        }
-    }
-
-    const uint64 dif = Time::Now - start;
-    trace("replaced " + total + " CP block" + (total == 1 ? "" : "s") + " after " + dif + "ms (" + Time::Format(dif) + ")");
-
-    if (total > 0)
-        PMT.AutoSave();  // usually doesn't save but at least fixes undo
-
-    replacing = false;
+void ReplaceCheckpointBlocks() {
+    ReplaceBlocks(mapBlocksCp, "checkpoint");
 }
 
 void ReplaceFinishBlocks() {
-    if (replacing)
-        return;
-
-    replacing = true;
-
-    const uint64 start = Time::Now;
-    trace("replacing finish blocks");
-
-    CTrackMania@ App = cast<CTrackMania@>(GetApp());
-
-    CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree@>(App.Editor);
-    if (Editor is null) {
-        warn("can't replace finish blocks - Editor is null");
-        replacing = false;
-        return;
-    }
-
-    CSmEditorPluginMapType@ PMT = cast<CSmEditorPluginMapType@>(Editor.PluginMapType);
-    if (PMT is null) {
-        warn("can't replace finish blocks - PMT is null");
-        replacing = false;
-        return;
-    }
-
-    uint total = 0;
-
-    LoadMapBlocks();
-
-    for (uint i = 0; i < mapBlocksFin.Length; i++) {
-        YieldIfNeeded();
-
-        trace("replacing finish block (" + (i + 1) + " / " + mapBlocksFin.Length + ")");
-
-        Block@ block = mapBlocksFin[i];
-
-        const bool airBlockModePre = AirBlockModeActive(Editor);
-        const CGameEditorPluginMap::EMapElemColor colorPre = PMT.NextMapElemColor;
-
-        if (ReplaceBlock(block, Editor, PMT, LUT["finish"], airBlockModePre))
-            total++;
-
-        if (airBlockModePre != AirBlockModeActive(Editor))
-            Editor.ButtonAirBlockModeOnClick();
-
-        PMT.NextMapElemColor = colorPre;
-
-        if (stopReplacing) {
-            stopReplacing = false;
-            break;
-        }
-    }
-
-    const uint64 dif = Time::Now - start;
-    trace("replaced " + total + " finish block" + (total == 1 ? "" : "s") + " after " + dif + "ms (" + Time::Format(dif) + ")");
-
-    if (total > 0)
-        PMT.AutoSave();  // usually doesn't save but at least fixes undo
-
-    replacing = false;
+    ReplaceBlocks(mapBlocksFin, "finish");
 }
 
 void ReplaceMultilapBlocks() {
-    if (replacing)
-        return;
-
-    replacing = true;
-
-    const uint64 start = Time::Now;
-    trace("replacing multilap blocks");
-
-    CTrackMania@ App = cast<CTrackMania@>(GetApp());
-
-    CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree@>(App.Editor);
-    if (Editor is null) {
-        warn("can't replace multilap blocks - Editor is null");
-        replacing = false;
-        return;
-    }
-
-    CSmEditorPluginMapType@ PMT = cast<CSmEditorPluginMapType@>(Editor.PluginMapType);
-    if (PMT is null) {
-        warn("can't replace multilap blocks - PMT is null");
-        replacing = false;
-        return;
-    }
-
-    uint total = 0;
-
-    LoadMapBlocks();
-
-    for (uint i = 0; i < mapBlocksMultilap.Length; i++) {
-        YieldIfNeeded();
-
-        trace("replacing multilap block (" + (i + 1) + " / " + mapBlocksMultilap.Length + ")");
-
-        Block@ block = mapBlocksMultilap[i];
-
-        const bool airBlockModePre = AirBlockModeActive(Editor);
-        const CGameEditorPluginMap::EMapElemColor colorPre = PMT.NextMapElemColor;
-
-        if (ReplaceBlock(block, Editor, PMT, LUT["multilap"], airBlockModePre))
-            total++;
-
-        if (airBlockModePre != AirBlockModeActive(Editor))
-            Editor.ButtonAirBlockModeOnClick();
-
-        PMT.NextMapElemColor = colorPre;
-
-        if (stopReplacing) {
-            stopReplacing = false;
-            break;
-        }
-    }
-
-    const uint64 dif = Time::Now - start;
-    trace("replaced " + total + " multilap block" + (total == 1 ? "" : "s") + " after " + dif + "ms (" + Time::Format(dif) + ")");
-
-    if (total > 0)
-        PMT.AutoSave();  // usually doesn't save but at least fixes undo
-
-    replacing = false;
+    ReplaceBlocks(mapBlocksMultilap, "multilap");
 }
 
 void ReplaceStartBlocks() {
+    ReplaceBlocks(mapBlocksStart, "start");
+}
+
+void ReplaceBlocks(Block@[]@ blocks, const string &in type) {
     if (replacing)
         return;
 
     replacing = true;
 
     const uint64 start = Time::Now;
-    trace("replacing start blocks");
+    trace("replacing " + type + " blocks");
 
     CTrackMania@ App = cast<CTrackMania@>(GetApp());
 
     CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree@>(App.Editor);
     if (Editor is null) {
-        warn("can't replace start blocks - Editor is null");
+        warn("can't replace " + type + " blocks - Editor is null");
         replacing = false;
         return;
     }
 
     CSmEditorPluginMapType@ PMT = cast<CSmEditorPluginMapType@>(Editor.PluginMapType);
     if (PMT is null) {
-        warn("can't replace start blocks - PMT is null");
+        warn("can't replace " + type + " blocks - PMT is null");
         replacing = false;
         return;
     }
@@ -235,17 +65,17 @@ void ReplaceStartBlocks() {
 
     LoadMapBlocks();
 
-    for (uint i = 0; i < mapBlocksStart.Length; i++) {
+    for (uint i = 0; i < blocks.Length; i++) {
         YieldIfNeeded();
 
-        trace("replacing start block (" + (i + 1) + " / " + mapBlocksStart.Length + ")");
+        trace("replacing " + type + " block (" + (i + 1) + " / " + blocks.Length + ")");
 
-        Block@ block = mapBlocksStart[i];
+        Block@ block = blocks[i];
 
         const bool airBlockModePre = AirBlockModeActive(Editor);
         const CGameEditorPluginMap::EMapElemColor colorPre = PMT.NextMapElemColor;
 
-        if (ReplaceBlock(block, Editor, PMT, LUT["start"], airBlockModePre))
+        if (ReplaceBlock(block, Editor, PMT, LUT[type], airBlockModePre))
             total++;
 
         if (airBlockModePre != AirBlockModeActive(Editor))
@@ -260,7 +90,7 @@ void ReplaceStartBlocks() {
     }
 
     const uint64 dif = Time::Now - start;
-    trace("replaced " + total + " start block" + (total == 1 ? "" : "s") + " after " + dif + "ms (" + Time::Format(dif) + ")");
+    trace("replaced " + total + " " + type + " block" + (total == 1 ? "" : "s") + " after " + dif + "ms (" + Time::Format(dif) + ")");
 
     if (total > 0)
         PMT.AutoSave();  // usually doesn't save but at least fixes undo
@@ -269,7 +99,7 @@ void ReplaceStartBlocks() {
 }
 
 bool ReplaceBlock(Block@ block, CGameCtnEditorFree@ Editor, CSmEditorPluginMapType@ PMT, Json::Value@ lut, bool airBlockModePre) {
-    if (block is null || PMT is null || lut is null)
+    if (block is null || PMT is null || lut is null || lut.GetType() == Json::Type::Null)
         return false;
 
     const string name = block.name;
