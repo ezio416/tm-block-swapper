@@ -1,5 +1,5 @@
 // c 2024-03-19
-// m 2024-03-20
+// m 2024-03-21
 
 Json::Value@ LUT;
 bool         replacing     = false;
@@ -11,11 +11,11 @@ void InitLUT() {
     if (
         LUT.GetType() != Json::Type::Object
         || !LUT.HasKey("checkpoint")
+        || !LUT.HasKey("finish")
         || !LUT.HasKey("multilap")
         || !LUT.HasKey("start")
-        || !LUT.HasKey("finish")
     ) {
-        error("LUT.json is invalid or missing");
+        error("LUT.json is invalid or missing!");
         @LUT = null;
     }
 }
@@ -41,7 +41,7 @@ void ReplaceCpBlocks() {
     CSmEditorPluginMapType@ PMT = cast<CSmEditorPluginMapType@>(Editor.PluginMapType);
     if (PMT is null) {
         warn("can't replace CP blocks - PMT is null");
-        removing = false;
+        replacing = false;
         return;
     }
 
@@ -75,6 +75,192 @@ void ReplaceCpBlocks() {
 
     const uint64 dif = Time::Now - start;
     trace("replaced " + total + " CP block" + (total == 1 ? "" : "s") + " after " + dif + "ms (" + Time::Format(dif) + ")");
+
+    if (total > 0)
+        PMT.AutoSave();  // usually doesn't save but at least fixes undo
+
+    replacing = false;
+}
+
+void ReplaceFinishBlocks() {
+    if (replacing)
+        return;
+
+    replacing = true;
+
+    const uint64 start = Time::Now;
+    trace("replacing finish blocks");
+
+    CTrackMania@ App = cast<CTrackMania@>(GetApp());
+
+    CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree@>(App.Editor);
+    if (Editor is null) {
+        warn("can't replace finish blocks - Editor is null");
+        replacing = false;
+        return;
+    }
+
+    CSmEditorPluginMapType@ PMT = cast<CSmEditorPluginMapType@>(Editor.PluginMapType);
+    if (PMT is null) {
+        warn("can't replace finish blocks - PMT is null");
+        replacing = false;
+        return;
+    }
+
+    uint total = 0;
+
+    LoadMapBlocks();
+
+    for (uint i = 0; i < mapBlocksFin.Length; i++) {
+        YieldIfNeeded();
+
+        trace("replacing finish block (" + (i + 1) + " / " + mapBlocksFin.Length + ")");
+
+        Block@ block = mapBlocksFin[i];
+
+        const bool airBlockModePre = AirBlockModeActive(Editor);
+        const CGameEditorPluginMap::EMapElemColor colorPre = PMT.NextMapElemColor;
+
+        if (ReplaceBlock(block, Editor, PMT, LUT["finish"], airBlockModePre))
+            total++;
+
+        if (airBlockModePre != AirBlockModeActive(Editor))
+            Editor.ButtonAirBlockModeOnClick();
+
+        PMT.NextMapElemColor = colorPre;
+
+        if (stopReplacing) {
+            stopReplacing = false;
+            break;
+        }
+    }
+
+    const uint64 dif = Time::Now - start;
+    trace("replaced " + total + " finish block" + (total == 1 ? "" : "s") + " after " + dif + "ms (" + Time::Format(dif) + ")");
+
+    if (total > 0)
+        PMT.AutoSave();  // usually doesn't save but at least fixes undo
+
+    replacing = false;
+}
+
+void ReplaceMultilapBlocks() {
+    if (replacing)
+        return;
+
+    replacing = true;
+
+    const uint64 start = Time::Now;
+    trace("replacing multilap blocks");
+
+    CTrackMania@ App = cast<CTrackMania@>(GetApp());
+
+    CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree@>(App.Editor);
+    if (Editor is null) {
+        warn("can't replace multilap blocks - Editor is null");
+        replacing = false;
+        return;
+    }
+
+    CSmEditorPluginMapType@ PMT = cast<CSmEditorPluginMapType@>(Editor.PluginMapType);
+    if (PMT is null) {
+        warn("can't replace multilap blocks - PMT is null");
+        replacing = false;
+        return;
+    }
+
+    uint total = 0;
+
+    LoadMapBlocks();
+
+    for (uint i = 0; i < mapBlocksMultilap.Length; i++) {
+        YieldIfNeeded();
+
+        trace("replacing multilap block (" + (i + 1) + " / " + mapBlocksMultilap.Length + ")");
+
+        Block@ block = mapBlocksMultilap[i];
+
+        const bool airBlockModePre = AirBlockModeActive(Editor);
+        const CGameEditorPluginMap::EMapElemColor colorPre = PMT.NextMapElemColor;
+
+        if (ReplaceBlock(block, Editor, PMT, LUT["multilap"], airBlockModePre))
+            total++;
+
+        if (airBlockModePre != AirBlockModeActive(Editor))
+            Editor.ButtonAirBlockModeOnClick();
+
+        PMT.NextMapElemColor = colorPre;
+
+        if (stopReplacing) {
+            stopReplacing = false;
+            break;
+        }
+    }
+
+    const uint64 dif = Time::Now - start;
+    trace("replaced " + total + " multilap block" + (total == 1 ? "" : "s") + " after " + dif + "ms (" + Time::Format(dif) + ")");
+
+    if (total > 0)
+        PMT.AutoSave();  // usually doesn't save but at least fixes undo
+
+    replacing = false;
+}
+
+void ReplaceStartBlocks() {
+    if (replacing)
+        return;
+
+    replacing = true;
+
+    const uint64 start = Time::Now;
+    trace("replacing start blocks");
+
+    CTrackMania@ App = cast<CTrackMania@>(GetApp());
+
+    CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree@>(App.Editor);
+    if (Editor is null) {
+        warn("can't replace start blocks - Editor is null");
+        replacing = false;
+        return;
+    }
+
+    CSmEditorPluginMapType@ PMT = cast<CSmEditorPluginMapType@>(Editor.PluginMapType);
+    if (PMT is null) {
+        warn("can't replace start blocks - PMT is null");
+        replacing = false;
+        return;
+    }
+
+    uint total = 0;
+
+    LoadMapBlocks();
+
+    for (uint i = 0; i < mapBlocksStart.Length; i++) {
+        YieldIfNeeded();
+
+        trace("replacing start block (" + (i + 1) + " / " + mapBlocksStart.Length + ")");
+
+        Block@ block = mapBlocksStart[i];
+
+        const bool airBlockModePre = AirBlockModeActive(Editor);
+        const CGameEditorPluginMap::EMapElemColor colorPre = PMT.NextMapElemColor;
+
+        if (ReplaceBlock(block, Editor, PMT, LUT["start"], airBlockModePre))
+            total++;
+
+        if (airBlockModePre != AirBlockModeActive(Editor))
+            Editor.ButtonAirBlockModeOnClick();
+
+        PMT.NextMapElemColor = colorPre;
+
+        if (stopReplacing) {
+            stopReplacing = false;
+            break;
+        }
+    }
+
+    const uint64 dif = Time::Now - start;
+    trace("replaced " + total + " start block" + (total == 1 ? "" : "s") + " after " + dif + "ms (" + Time::Format(dif) + ")");
 
     if (total > 0)
         PMT.AutoSave();  // usually doesn't save but at least fixes undo

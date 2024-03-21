@@ -1,5 +1,5 @@
 // c 2024-03-19
-// m 2024-03-20
+// m 2024-03-21
 
 bool     loadingMapBlocks = false;
 Block@[] mapBlocks;
@@ -8,6 +8,7 @@ Block@[] mapBlocksCpRing;
 Block@[] mapBlocksFin;
 Block@[] mapBlocksFinRingGate;
 Block@[] mapBlocksMultilap;
+Block@[] mapBlocksStart;
 
 void ClearMapBlocks() {
     mapBlocks            = {};
@@ -16,6 +17,7 @@ void ClearMapBlocks() {
     mapBlocksFin         = {};
     mapBlocksFinRingGate = {};
     mapBlocksMultilap    = {};
+    mapBlocksStart       = {};
 }
 
 void LoadMapBlocks() {
@@ -70,6 +72,8 @@ void LoadMapBlocks() {
                     mapBlocksFinRingGate.InsertLast(block);
                 else if (LUT["multilap"].HasKey(name))
                     mapBlocksMultilap.InsertLast(block);
+                else if (LUT["start"].HasKey(name))
+                    mapBlocksStart.InsertLast(block);
             }
         }
     }

@@ -1,5 +1,5 @@
 // c 2024-03-18
-// m 2024-03-20
+// m 2024-03-21
 
 const uint   nadeoAuthorId  = 0x40000E5A;
 const vec4   rowBgAltColor  = vec4(0.0f, 0.0f, 0.0f, 0.5f);
@@ -70,19 +70,65 @@ void Tab_Main() {
 
     UI::BeginDisabled(stopReplacing || !replacing);
     UI::SameLine();
-    if (UI::Button("STOP REPLACING"))
+    if (UI::Button("STOP REPLACING##cp"))
         stopReplacing = true;
     UI::EndDisabled();
 
     UI::BeginDisabled(removing);
-    if (UI::Button("Remove CP blocks"))
+    UI::SameLine();
+    if (UI::Button("Remove CP blocks (ring)"))
         startnew(RemoveCpBlocks);
     UI::EndDisabled();
 
     UI::BeginDisabled(stopRemoving || !removing);
     UI::SameLine();
-    if (UI::Button("STOP REMOVING"))
+    if (UI::Button("STOP REMOVING##cp"))
         stopRemoving = true;
+    UI::EndDisabled();
+
+    UI::BeginDisabled(replacing);
+    if (UI::Button("Replace finish blocks"))
+        startnew(ReplaceFinishBlocks);
+    UI::EndDisabled();
+
+    UI::BeginDisabled(stopReplacing || !replacing);
+    UI::SameLine();
+    if (UI::Button("STOP REPLACING##fin"))
+        stopReplacing = true;
+    UI::EndDisabled();
+
+    UI::BeginDisabled(removing);
+    UI::SameLine();
+    if (UI::Button("Remove finish blocks (ring/expandable)"))
+        startnew(RemoveCpBlocks);
+    UI::EndDisabled();
+
+    UI::BeginDisabled(stopRemoving || !removing);
+    UI::SameLine();
+    if (UI::Button("STOP REMOVING##fin"))
+        stopRemoving = true;
+    UI::EndDisabled();
+
+    UI::BeginDisabled(replacing);
+    if (UI::Button("Replace multilap blocks"))
+        startnew(ReplaceMultilapBlocks);
+    UI::EndDisabled();
+
+    UI::BeginDisabled(stopReplacing || !replacing);
+    UI::SameLine();
+    if (UI::Button("STOP REPLACING##multi"))
+        stopReplacing = true;
+    UI::EndDisabled();
+
+    UI::BeginDisabled(replacing);
+    if (UI::Button("Replace start blocks"))
+        startnew(ReplaceStartBlocks);
+    UI::EndDisabled();
+
+    UI::BeginDisabled(stopReplacing || !replacing);
+    UI::SameLine();
+    if (UI::Button("STOP REPLACING##start"))
+        stopReplacing = true;
     UI::EndDisabled();
 
     if (UI::Button("Make All Items Flying"))
