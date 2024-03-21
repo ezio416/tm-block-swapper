@@ -5,13 +5,15 @@ bool     loadingMapBlocks = false;
 Block@[] mapBlocks;
 Block@[] mapBlocksCp;
 Block@[] mapBlocksCpRing;
+Block@[] mapBlocksFin;
+Block@[] mapBlocksFinRingGate;
 
 void ClearMapBlocks() {
-    if (mapBlocks.Length == 0 && mapBlocksCp.Length == 0)
-        return;
-
-    mapBlocks = {};
-    mapBlocksCp = {};
+    mapBlocks            = {};
+    mapBlocksCp          = {};
+    mapBlocksCpRing      = {};
+    mapBlocksFin         = {};
+    mapBlocksFinRingGate = {};
 }
 
 void LoadMapBlocks() {
@@ -60,6 +62,10 @@ void LoadMapBlocks() {
                     mapBlocksCp.InsertLast(block);
                 else if (name == "GateCheckpoint")
                     mapBlocksCpRing.InsertLast(block);
+                else if (finLut.Exists(name))
+                    mapBlocksFin.InsertLast(block);
+                else if (name == "GateFinish" || name == "GateExpandableFinish")
+                    mapBlocksFinRingGate.InsertLast(block);
             }
         }
     }
