@@ -40,7 +40,11 @@ void InitLUTs() {
     cpLut["OpenGrassRoadCheckpoint"          ] = "OpenGrassRoadStraight"        ;
     cpLut["OpenGrassRoadCheckpointSlope2Up"  ] = "OpenGrassRoadSlope2Straight"  ;
 
-    finLut[""] = "";
+    finLut["RoadTechFinish" ] = "RoadTechStraight" ;
+    finLut["RoadDirtFinish" ] = "RoadDirtStraight" ;
+    finLut["RoadBumpFinish" ] = "RoadBumpStraight" ;
+    finLut["RoadIceFinish"  ] = "RoadIceStraight"  ;
+    finLut["RoadWaterFinish"] = "RoadWaterStraight";
 }
 
 void ReplaceCPs() {
