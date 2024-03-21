@@ -114,7 +114,7 @@ void ReplaceCpBlocks() {
     }
 
     const uint64 dif = Time::Now - start;
-    trace("replaced " + total + " block" + (total == 1 ? "" : "s") + " after " + dif + "ms (" + Time::Format(dif) + ")");
+    trace("replaced " + total + " CP block" + (total == 1 ? "" : "s") + " after " + dif + "ms (" + Time::Format(dif) + ")");
 
     if (total > 0)
         PMT.AutoSave();  // usually doesn't save but at least fixes undo
