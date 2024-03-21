@@ -63,17 +63,28 @@ void Tab_Main() {
 
     UI::BeginDisabled(replacing);
     if (UI::Button("Replace CP blocks"))
-        startnew(ReplaceCPs);
+        startnew(ReplaceCpBlocks);
     UI::EndDisabled();
 
     UI::BeginDisabled(stopReplacing || !replacing);
     UI::SameLine();
-    if (UI::Button("STOP"))
+    if (UI::Button("STOP REPLACING"))
         stopReplacing = true;
     UI::EndDisabled();
 
+    UI::BeginDisabled(removing);
+    if (UI::Button("Remove CP blocks"))
+        startnew(RemoveCpBlocks);
+    UI::EndDisabled();
+
+    UI::BeginDisabled(stopRemoving || !removing);
+    UI::SameLine();
+    if (UI::Button("STOP REMOVING"))
+        stopRemoving = true;
+    UI::EndDisabled();
+
     if (UI::Button("Make All Items Flying"))
-        MakeAllItemsFlying();
+        startnew(MakeAllItemsFlying);
 
     UI::EndTabItem();
 }

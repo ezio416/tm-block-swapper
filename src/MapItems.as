@@ -42,14 +42,14 @@ void LoadMapItems() {
     loadingMapItems = false;
 }
 
-uint MakeAllItemsFlying() {
+void MakeAllItemsFlying() {
     trace("making items flying");
 
     CTrackMania@ App = cast<CTrackMania@>(GetApp());
 
     CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree@>(App.Editor);
     if (Editor is null || Editor.Challenge is null)
-        return 0;
+        return;
 
     uint total = 0;
 
@@ -63,8 +63,6 @@ uint MakeAllItemsFlying() {
     }
 
     trace("made " + total + " items flying");
-
-    return total;
 }
 
 void Tab_MapItems() {
