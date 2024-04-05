@@ -3,3 +3,6 @@ name = "Block Swapper"
 author = "Ezio"
 category = "Map Editor"
 version = "0.1.0"
+
+[script]
+dependencies = [ "Editor" ]

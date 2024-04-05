@@ -1,5 +1,5 @@
 // c 2024-03-19
-// m 2024-03-21
+// m 2024-04-05
 
 bool     loadingMapBlocks = false;
 Block@[] mapBlocks;
@@ -59,22 +59,20 @@ void LoadMapBlocks() {
         if (block.id.Value != stadiumGrassId) {
             mapBlocks.InsertLast(block);
 
-            if (!block.free) {
-                const string name = block.name;
+            const string name = block.name;
 
-                if (LUT["checkpoint"].HasKey(name))
-                    mapBlocksCp.InsertLast(block);
-                else if (name == "GateCheckpoint")
-                    mapBlocksCpRing.InsertLast(block);
-                else if (LUT["finish"].HasKey(name))
-                    mapBlocksFin.InsertLast(block);
-                else if (name == "GateFinish" || name == "GateExpandableFinish")
-                    mapBlocksFinRingGate.InsertLast(block);
-                else if (LUT["multilap"].HasKey(name))
-                    mapBlocksMultilap.InsertLast(block);
-                else if (LUT["start"].HasKey(name))
-                    mapBlocksStart.InsertLast(block);
-            }
+            if (!block.free && LUT["checkpoint"].HasKey(name))
+                mapBlocksCp.InsertLast(block);
+            else if (name == "GateCheckpoint")
+                mapBlocksCpRing.InsertLast(block);
+            else if (!block.free && LUT["finish"].HasKey(name))
+                mapBlocksFin.InsertLast(block);
+            else if (name == "GateFinish" || name == "GateExpandableFinish")
+                mapBlocksFinRingGate.InsertLast(block);
+            else if (!block.free && LUT["multilap"].HasKey(name))
+                mapBlocksMultilap.InsertLast(block);
+            else if (!block.free && LUT["start"].HasKey(name))
+                mapBlocksStart.InsertLast(block);
         }
     }
 

@@ -1,5 +1,5 @@
 // c 2024-03-18
-// m 2024-03-21
+// m 2024-04-05
 
 const uint   nadeoAuthorId  = 0x40000E5A;
 const vec4   rowBgAltColor  = vec4(0.0f, 0.0f, 0.0f, 0.5f);
@@ -77,13 +77,7 @@ void Tab_Main() {
     UI::BeginDisabled(removing);
     UI::SameLine();
     if (UI::Button("Remove checkpoint blocks (ring)"))
-        startnew(RemoveCheckpointBlocks);
-    UI::EndDisabled();
-
-    UI::BeginDisabled(stopRemoving || !removing);
-    UI::SameLine();
-    if (UI::Button("STOP REMOVING##cp"))
-        stopRemoving = true;
+        startnew(RemoveCheckpointBlocks).WithRunContext(Meta::RunContext::MainLoop);
     UI::EndDisabled();
 
     UI::SameLine();
@@ -105,12 +99,6 @@ void Tab_Main() {
     UI::SameLine();
     if (UI::Button("Remove finish blocks (ring/expandable)"))
         startnew(RemoveFinishBlocks);
-    UI::EndDisabled();
-
-    UI::BeginDisabled(stopRemoving || !removing);
-    UI::SameLine();
-    if (UI::Button("STOP REMOVING##fin"))
-        stopRemoving = true;
     UI::EndDisabled();
 
     UI::SameLine();

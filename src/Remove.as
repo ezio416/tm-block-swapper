@@ -1,8 +1,7 @@
 // c 2024-03-19
-// m 2024-03-21
+// m 2024-04-05
 
-bool removing     = false;
-bool stopRemoving = false;
+bool removing = false;
 
 void RemoveCheckpointBlocks() {
     if (removing)
@@ -13,60 +12,39 @@ void RemoveCheckpointBlocks() {
     const uint64 start = Time::Now;
     trace("removing checkpoint blocks");
 
-    CTrackMania@ App = cast<CTrackMania@>(GetApp());
-
-    CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree@>(App.Editor);
-    if (Editor is null) {
-        warn("can't remove checkpoint blocks - Editor is null");
-        removing = false;
-        return;
-    }
-
-    CSmEditorPluginMapType@ PMT = cast<CSmEditorPluginMapType@>(Editor.PluginMapType);
-    if (PMT is null) {
-        warn("can't remove checkpoint blocks - PMT is null");
-        removing = false;
-        return;
-    }
-
-    uint total = 0;
-
     LoadMapBlocks();
 
-    for (uint i = 0; i < mapBlocksCpRing.Length; i++) {
-        YieldIfNeeded();
+    CTrackMania@ App = cast<CTrackMania@>(GetApp());
 
-        trace("removing ring checkpoint (" + (i + 1) + " / " + mapBlocksCpRing.Length + ")");
-
-        Block@ block = mapBlocksCpRing[i];
-
-        if (block.block is null || block.block.BlockModel is null) {
-            warn("can't remove ring checkpoint - something is null");
-            continue;
-        }
-
-        if (block.ghost) {
-            if (!PMT.RemoveGhostBlock(block.block.BlockModel, block.coord, CGameEditorPluginMap::ECardinalDirections(block.direction))) {
-                warn("failed to remove ghost block at " + tostring(block.coord));
-                continue;
-            }
-        } else {
-            if (!PMT.RemoveBlockSafe(block.block.BlockModel, block.coord, CGameEditorPluginMap::ECardinalDirections(block.direction))) {
-                warn("failed to remove block at " + tostring(block.coord));
-                continue;
-            }
-        }
-
-        total++;
+    if (cast<CGameCtnEditorFree@>(App.Editor) is null) {
+        warn("can't remove checkpoint blocks - editor is null");
+        removing = false;
+        return;
     }
 
-    const uint64 dif = Time::Now - start;
-    trace("removed " + total + " checkpoint block" + (total == 1 ? "" : "s") + " after " + dif + "ms (" + Time::Format(dif) + ")");
+    CGameCtnBlock@[] freeBlocks;
+    CGameCtnBlock@[] blocks;
 
-    if (total > 0)
-        PMT.AutoSave();  // usually doesn't save but at least fixes undo
+    for (uint i = 0; i < mapBlocksCpRing.Length; i++) {
+        Block@ block = mapBlocksCpRing[i];
+
+        if (block.free)
+            freeBlocks.InsertLast(block.block);
+        else
+            blocks.InsertLast(block.block);
+    }
+
+    const uint deletedFree = Editor::DeleteFreeblocks(freeBlocks);
+    const bool deleted = Editor::DeleteBlocks(blocks, true);
+
+    const uint total = deletedFree + (deleted ? blocks.Length : 0);
+
+    const uint64 dif = Time::Now - start;
+    trace("removed " + total + " / " + mapBlocksCpRing.Length + " checkpoint block" + (total == 1 ? "" : "s") + " after " + dif + "ms (" + Time::Format(dif) + ")");
 
     removing = false;
+
+    LoadMapBlocks();
 }
 
 void RemoveFinishBlocks() {
@@ -78,199 +56,117 @@ void RemoveFinishBlocks() {
     const uint64 start = Time::Now;
     trace("removing finish blocks");
 
-    CTrackMania@ App = cast<CTrackMania@>(GetApp());
-
-    CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree@>(App.Editor);
-    if (Editor is null) {
-        warn("can't remove finish blocks - Editor is null");
-        removing = false;
-        return;
-    }
-
-    CSmEditorPluginMapType@ PMT = cast<CSmEditorPluginMapType@>(Editor.PluginMapType);
-    if (PMT is null) {
-        warn("can't remove finish blocks - PMT is null");
-        removing = false;
-        return;
-    }
-
-    uint total = 0;
-
     LoadMapBlocks();
 
-    for (uint i = 0; i < mapBlocksFinRingGate.Length; i++) {
-        YieldIfNeeded();
+    CTrackMania@ App = cast<CTrackMania@>(GetApp());
 
-        trace("removing ring checkpoint (" + (i + 1) + " / " + mapBlocksFinRingGate.Length + ")");
-
-        Block@ block = mapBlocksFinRingGate[i];
-
-        if (block.block is null || block.block.BlockModel is null) {
-            warn("can't remove ring finish - something is null");
-            continue;
-        }
-
-        if (block.ghost) {
-            if (!PMT.RemoveGhostBlock(block.block.BlockModel, block.coord, CGameEditorPluginMap::ECardinalDirections(block.direction))) {
-                warn("failed to remove ghost block at " + tostring(block.coord));
-                continue;
-            }
-        } else {
-            if (!PMT.RemoveBlockSafe(block.block.BlockModel, block.coord, CGameEditorPluginMap::ECardinalDirections(block.direction))) {
-                warn("failed to remove block at " + tostring(block.coord));
-                continue;
-            }
-        }
-
-        total++;
+    if (cast<CGameCtnEditorFree@>(App.Editor) is null) {
+        warn("can't remove finish blocks - editor is null");
+        removing = false;
+        return;
     }
 
-    const uint64 dif = Time::Now - start;
-    trace("removed " + total + " finish block" + (total == 1 ? "" : "s") + " after " + dif + "ms (" + Time::Format(dif) + ")");
+    CGameCtnBlock@[] freeBlocks;
+    CGameCtnBlock@[] blocks;
 
-    if (total > 0)
-        PMT.AutoSave();  // usually doesn't save but at least fixes undo
+    for (uint i = 0; i < mapBlocksFinRingGate.Length; i++) {
+        Block@ block = mapBlocksFinRingGate[i];
+
+        if (block.free)
+            freeBlocks.InsertLast(block.block);
+        else
+            blocks.InsertLast(block.block);
+    }
+
+    const uint deletedFree = Editor::DeleteFreeblocks(freeBlocks);
+    const bool deleted = Editor::DeleteBlocks(blocks, true);
+
+    const uint total = deletedFree + (deleted ? blocks.Length : 0);
+
+    const uint64 dif = Time::Now - start;
+    trace("removed " + total + " / " + mapBlocksFinRingGate.Length + " finish block" + (total == 1 ? "" : "s") + " after " + dif + "ms (" + Time::Format(dif) + ")");
 
     removing = false;
+
+    LoadMapBlocks();
 }
 
 void RemoveCheckpointItems() {
-    print("removing checkpoint items");
-
-    CTrackMania@ App = cast<CTrackMania@>(GetApp());
-
-    CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree>(App.Editor);
-    if (Editor is null)
+    if (removing)
         return;
 
-    CGameEditorPluginMapMapType@ PMT = Editor.PluginMapType;
-    if (PMT is null)
-        return;
+    removing = true;
 
-    uint total = 0;
+    const uint64 start = Time::Now;
+    trace("removing checkpoint items");
 
     LoadMapItems();
 
-    CGameCtnChallenge@ Map = Editor.Challenge;
-    if (Map is null)
+    CTrackMania@ App = cast<CTrackMania@>(GetApp());
+
+    if (cast<CGameCtnEditorFree@>(App.Editor) is null) {
+        warn("can't remove checkpoint items - editor is null");
+        removing = false;
         return;
-
-    CGameCtnAnchoredObject@[] itemsToKeep;
-
-    for (int i = mapItems.Length - 1; i >= 0; i--) {
-        Item@ item = mapItems[i];
-
-        if (item.waypointType != CGameItemModel::EnumWaypointType::Checkpoint)
-            itemsToKeep.InsertLast(item.item);
-        else
-            total++;
     }
 
-    const uint16 offsetAnchored = GetMemberOffset(Map, "AnchoredObjects");
+    CGameCtnAnchoredObject@[] items;
 
-    CMwNod@ bufPtr = Dev::GetOffsetNod(Map, offsetAnchored);
+    for (uint i = 0; i < mapItems.Length; i++) {
+        Item@ item = mapItems[i];
 
-    for (uint i = 0; i < itemsToKeep.Length; i++)
-        Dev::SetOffset(bufPtr, 0x8 * i, itemsToKeep[i]);
+        if (item.waypointType == CGameItemModel::EnumWaypointType::Checkpoint)
+            items.InsertLast(item.item);
+    }
 
-    Dev::SetOffset(Map, offsetAnchored + 0x8, itemsToKeep.Length);
-    SaveAndReloadMap();
+    const bool deleted = Editor::DeleteItems(items, true);
 
-    print("removed " + total + " checkpoint items");
+    const uint total = deleted ? items.Length : 0;
+
+    const uint64 dif = Time::Now - start;
+    trace("removed " + total + " / " + items.Length + " checkpoint item" + (total == 1 ? "" : "s") + " after " + dif + "ms (" + Time::Format(dif) + ")");
+
+    removing = false;
+
+    LoadMapItems();
 }
 
 void RemoveFinishItems() {
-    print("removing finish items");
-
-    CTrackMania@ App = cast<CTrackMania@>(GetApp());
-
-    CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree>(App.Editor);
-    if (Editor is null)
+    if (removing)
         return;
 
-    CGameEditorPluginMapMapType@ PMT = Editor.PluginMapType;
-    if (PMT is null)
-        return;
+    removing = true;
 
-    uint total = 0;
+    const uint64 start = Time::Now;
+    trace("removing finish items");
 
     LoadMapItems();
 
-    CGameCtnChallenge@ Map = Editor.Challenge;
-    if (Map is null)
+    CTrackMania@ App = cast<CTrackMania@>(GetApp());
+
+    if (cast<CGameCtnEditorFree@>(App.Editor) is null) {
+        warn("can't remove finish items - editor is null");
+        removing = false;
         return;
+    }
 
-    CGameCtnAnchoredObject@[] itemsToKeep;
+    CGameCtnAnchoredObject@[] items;
 
-    for (int i = mapItems.Length - 1; i >= 0; i--) {
+    for (uint i = 0; i < mapItems.Length; i++) {
         Item@ item = mapItems[i];
 
-        if (item.waypointType != CGameItemModel::EnumWaypointType::Finish)
-            itemsToKeep.InsertLast(item.item);
-        else
-            total++;
+        if (item.waypointType == CGameItemModel::EnumWaypointType::Finish)
+            items.InsertLast(item.item);
     }
 
-    const uint16 offsetAnchored = GetMemberOffset(Map, "AnchoredObjects");
+    const bool deleted = Editor::DeleteItems(items, true);
 
-    CMwNod@ bufPtr = Dev::GetOffsetNod(Map, offsetAnchored);
+    const uint total = deleted ? items.Length : 0;
 
-    for (uint i = 0; i < itemsToKeep.Length; i++)
-        Dev::SetOffset(bufPtr, 0x8 * i, itemsToKeep[i]);
+    const uint64 dif = Time::Now - start;
+    trace("removed " + total + " / " + items.Length + " finish item" + (total == 1 ? "" : "s") + " after " + dif + "ms (" + Time::Format(dif) + ")");
 
-    Dev::SetOffset(Map, offsetAnchored + 0x8, itemsToKeep.Length);
-    SaveAndReloadMap();
+    removing = false;
 
-    print("removed " + total + " finish items");
-}
-
-void SaveAndReloadMap() {
-    print("save and reload map");
-
-    CTrackMania@ App = cast<CTrackMania@>(GetApp());
-    CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree@>(App.Editor);
-
-    if (!SaveMapSameName(Editor)) {
-        warn("Map must be saved, first. Please save and reload manually!");
-        return;
-    }
-
-    string fileName = Editor.Challenge.MapInfo.FileName;
-    while (!Editor.PluginMapType.IsEditorReadyForRequest)
-        yield();
-
-    App.BackToMainMenu();
-    print('back to menu');
-    AwaitReturnToMenu();
-    App.ManiaTitleControlScriptAPI.EditMap(fileName, "", "");
-    AwaitEditor();
-    startnew(_RestoreMapName);
-}
-
-bool SaveMapSameName(CGameCtnEditorFree@ Editor) {
-    string fileName = Editor.Challenge.MapInfo.FileName;
-    _restoreMapName = Editor.Challenge.MapName;
-    if (fileName.Length == 0) {
-        warn("Map must be saved, first.");
-        return false;
-    }
-    Editor.PluginMapType.SaveMap(fileName);
-    startnew(_RestoreMapName);
-    print('saved map');
-    return true;
-}
-
-string _restoreMapName;
-// set after calling SaveMapSameName
-void _RestoreMapName() {
-    yield();
-
-    if (_restoreMapName.Length == 0)
-        return;
-
-    CTrackMania@ App = cast<CTrackMania@>(GetApp());
-
-    CGameCtnEditorFree@ Editor = cast<CGameCtnEditorFree>(App.Editor);
-    Editor.Challenge.MapName = _restoreMapName;
-    print('restored map name: ' + _restoreMapName);
+    LoadMapItems();
 }
