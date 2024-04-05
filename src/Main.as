@@ -98,7 +98,7 @@ void Tab_Main() {
     UI::BeginDisabled(removing);
     UI::SameLine();
     if (UI::Button("Remove finish blocks (ring/expandable)"))
-        startnew(RemoveFinishBlocks);
+        startnew(RemoveFinishBlocks).WithRunContext(Meta::RunContext::MainLoop);
     UI::EndDisabled();
 
     UI::SameLine();
