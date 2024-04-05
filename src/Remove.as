@@ -3,6 +3,16 @@
 
 bool removing = false;
 
+void RemoveCheckpointBlocks() {
+    LoadMapBlocks();
+    RemoveBlocks(mapBlocksCpRing, "checkpoint");
+}
+
+void RemoveFinishBlocks() {
+    LoadMapBlocks();
+    RemoveBlocks(mapBlocksFinRingGate, "finish");
+}
+
 void RemoveBlocks(Block@[] blocksArr, const string &in type) {
     if (removing)
         return;
@@ -45,14 +55,14 @@ void RemoveBlocks(Block@[] blocksArr, const string &in type) {
     LoadMapBlocks();
 }
 
-void RemoveCheckpointBlocks() {
-    LoadMapBlocks();
-    RemoveBlocks(mapBlocksCpRing, "checkpoint");
+void RemoveCheckpointItems() {
+    LoadMapItems();
+    RemoveWaypointItems(CGameItemModel::EnumWaypointType::Checkpoint);
 }
 
-void RemoveFinishBlocks() {
-    LoadMapBlocks();
-    RemoveBlocks(mapBlocksFinRingGate, "finish");
+void RemoveFinishItems() {
+    LoadMapItems();
+    RemoveWaypointItems(CGameItemModel::EnumWaypointType::Finish);
 }
 
 void RemoveWaypointItems(CGameItemModel::EnumWaypointType wpType) {
@@ -93,14 +103,4 @@ void RemoveWaypointItems(CGameItemModel::EnumWaypointType wpType) {
     removing = false;
 
     LoadMapItems();
-}
-
-void RemoveCheckpointItems() {
-    LoadMapItems();
-    RemoveWaypointItems(CGameItemModel::EnumWaypointType::Checkpoint);
-}
-
-void RemoveFinishItems() {
-    LoadMapItems();
-    RemoveWaypointItems(CGameItemModel::EnumWaypointType::Finish);
 }
