@@ -1,5 +1,5 @@
 // c 2024-03-19
-// m 2024-03-20
+// m 2024-07-09
 
 const uint16 offsetAirBlockMode = GetMemberOffset("CGameCtnEditorFree", "GridColor") - 0x34;  // 0xBD4 - 0xC08 (GridColor)
 const uint16 offsetFreeBlockPos = GetMemberOffset("CGameCtnBlock", "Dir") + 0x8;
@@ -148,7 +148,7 @@ void Table_Offsets(CMwNod@ nod) {
             }
             const bool maybePointer = PointerLooksGood(Dev::GetOffsetUint64(nod, offset)) && offset % 8 == 0;
             if (maybePointer) {
-                const string raw = StripFormatCodes(value).Replace("\\", "");
+                const string raw = Text::StripFormatCodes(value).Replace("\\", "");
                 value = PURPLE + raw + " (" + Text::FormatPointer(Text::ParseUInt64(raw)) + ")";
             }
             if (UI::Selectable(value, false))
@@ -253,7 +253,7 @@ string RoundUint(uint num) {  // separate function else a uint gets converted to
 }
 
 void SetClipboard(const string &in text) {
-    IO::SetClipboard(StripFormatCodes(text).Replace("\\", ""));
+    IO::SetClipboard(Text::StripFormatCodes(text).Replace("\\", ""));
 }
 
 uint64[] memoryAllocations = array<uint64>();
