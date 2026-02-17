@@ -41,6 +41,8 @@ void Tab_CatalogObjects() {
     if (!UI::BeginTabItem("Catalog Objects"))
         return;
 
+    const float scale = UI::GetScale();
+
     UI::BeginDisabled(loadingCatalogObjects);
     if (UI::Button("Load Catalog Objects"))
         startnew(LoadCatalogObjects);

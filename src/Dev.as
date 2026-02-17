@@ -81,6 +81,8 @@ void Table_Offsets(CMwNod@ nod) {
     if (nod is null)
         return;
 
+    const float scale = UI::GetScale();
+
     UI::Text("refs: " + Reflection::GetRefCount(nod));
 
     const uint64 ptr = Dev_GetPointerForNod(nod);

@@ -1,6 +1,5 @@
 const uint   nadeoAuthorId  = 0x40000E5A;
 const vec4   rowBgAltColor  = vec4(0.0f, 0.0f, 0.0f, 0.5f);
-const float  scale          = UI::GetScale();
 const uint   stadiumGrassId = 0x4000214A;
 const string title          = "\\$FFF" + Icons::Exchange + "\\$G Block Swapper";
 

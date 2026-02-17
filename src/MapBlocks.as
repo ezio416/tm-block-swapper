@@ -82,6 +82,8 @@ void Tab_MapBlocks() {
     if (!UI::BeginTabItem("Map Blocks"))
         return;
 
+    const float scale = UI::GetScale();
+
     UI::BeginDisabled(loadingMapBlocks);
     if (UI::Button("Load Map Blocks"))
         startnew(LoadMapBlocks);
