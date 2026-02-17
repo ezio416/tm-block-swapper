@@ -1,6 +1,3 @@
-// c 2024-03-18
-// m 2024-03-20
-
 class Block {
     MwId                               author;
     CGameCtnBlock@                     block;

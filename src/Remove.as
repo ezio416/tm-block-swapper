@@ -1,6 +1,3 @@
-// c 2024-03-19
-// m 2024-04-05
-
 bool removing = false;
 
 void RemoveCheckpointBlocks() {

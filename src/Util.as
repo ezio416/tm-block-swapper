@@ -1,6 +1,3 @@
-// c 2024-03-19
-// m 2024-03-20
-
 uint64     lastYield    = 0;
 const uint maxFrameTime = 20;
 

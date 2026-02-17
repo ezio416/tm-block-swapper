@@ -1,6 +1,3 @@
-// c 2024-03-19
-// m 2024-07-09
-
 const uint16 offsetAirBlockMode = GetMemberOffset("CGameCtnEditorFree", "GridColor") - 0x34;  // 0xBD4 - 0xC08 (GridColor)
 const uint16 offsetFreeBlockPos = GetMemberOffset("CGameCtnBlock", "Dir") + 0x8;
 const uint16 offsetFreeBlockRot = offsetFreeBlockPos + 0xC;

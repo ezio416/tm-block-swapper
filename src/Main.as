@@ -1,6 +1,3 @@
-// c 2024-03-18
-// m 2024-04-05
-
 const uint   nadeoAuthorId  = 0x40000E5A;
 const vec4   rowBgAltColor  = vec4(0.0f, 0.0f, 0.0f, 0.5f);
 const float  scale          = UI::GetScale();

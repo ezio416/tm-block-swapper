@@ -1,6 +1,3 @@
-// c 2024-03-19
-// m 2024-03-21
-
 Json::Value@ LUT;
 bool         replacing     = false;
 bool         stopReplacing = false;
