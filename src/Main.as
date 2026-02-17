@@ -41,7 +41,7 @@ void Render() {
         return;
     }
 
-    if (UI::Begin(title, S_Enabled, UI::WindowFlags::AlwaysAutoResize)) {
+    if (UI::Begin(title, S_Enabled, UI::GetDefaultWindowFlags() | UI::WindowFlags::AlwaysAutoResize)) {
         UI::BeginTabBar("##tabs");
             Tab_Main();
             Tab_Custom();
